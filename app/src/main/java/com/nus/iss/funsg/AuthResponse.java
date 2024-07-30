@@ -1,6 +1,8 @@
 package com.nus.iss.funsg;
 
 public class AuthResponse {
+    //this class is use for login validation
+
     private String token;
 
     public String getToken() {

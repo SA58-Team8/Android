@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class UserLoginStatus {
+    //this class is used to store login info,to identify user and get preview
+
+
     private static final String PREFS_NAME = "UserLoginStatusPrefs";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_IS_PREVIEW = "is_preview";

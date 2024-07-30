@@ -1,6 +1,9 @@
 package com.nus.iss.funsg;
 
 public class AuthRequest {
+    //this class is use for login validation
+
+
     private String username;
     private String password;
     public AuthRequest(){}
