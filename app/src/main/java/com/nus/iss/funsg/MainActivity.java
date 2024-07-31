@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity{
             });
             bottomNavigationView.setSelectedItemId(R.id.nav_home_page);
         }
-        else if (UserLoginStatus.isPreview(this)) {
+        else if (!UserLoginStatus.isLoggedIn(this) &&UserLoginStatus.isPreview(this)) {
             setContentView(R.layout.activity_main);
             bottomNavigationView = findViewById(R.id.bottom_navigation);
             fragmentManager = getSupportFragmentManager();

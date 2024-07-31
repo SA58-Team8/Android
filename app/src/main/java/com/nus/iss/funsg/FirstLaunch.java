@@ -34,6 +34,7 @@ public class FirstLaunch extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(FirstLaunch.this,FirstLaunchRegister.class);
                 startActivity(intent);
+
             }
         });
 
@@ -42,6 +43,7 @@ public class FirstLaunch extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(FirstLaunch.this, FirstLaunchLogin.class);
                 startActivity(intent);
+
             }
         });
 

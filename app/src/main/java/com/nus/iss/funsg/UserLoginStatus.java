@@ -10,6 +10,10 @@ public class UserLoginStatus {
     private static final String PREFS_NAME = "UserLoginStatusPrefs";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_IS_PREVIEW = "is_preview";
+    private static final String KEY_TOKEN = "token";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_EMAIL = "email";
+
     public static void saveLoginStatus(Context context, boolean isLoggedIn){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -31,5 +35,23 @@ public class UserLoginStatus {
     public static boolean isPreview(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(KEY_IS_PREVIEW, false);
+    }
+
+    public static void saveUserInfo(Context context,String token,String username,String email){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(PREFS_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_TOKEN,token);
+        editor.putString(KEY_USERNAME,username);
+        editor.putString(KEY_EMAIL,email);
+        editor.apply();
+    }
+    public static void clearUserInfo(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(KEY_TOKEN);
+        editor.remove(KEY_USERNAME);
+        editor.remove(KEY_EMAIL);
+        editor.putBoolean(KEY_IS_LOGGED_IN, false);
+        editor.apply();
     }
 }

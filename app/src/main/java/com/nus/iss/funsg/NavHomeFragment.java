@@ -51,25 +51,26 @@ public class NavHomeFragment extends Fragment {
 
             if (getArguments() != null) {
                 isPreview = getArguments().getBoolean("isPreview", false);
+                suggestedText=view.findViewById(R.id.suggested_word);
+                suggestedText.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
+                suggestedText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(),
+                                "You need to log in to get suggestion.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                suggestedToggle=view.findViewById(R.id.customSwitch);
+                suggestedToggle.setVisibility(View.GONE);
+
+                viceCheckBtn=view.findViewById(R.id.vice_check_btn);
+                viceCheckBtn.setClickable(false);
+                viceCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
             }
 
-            suggestedText=view.findViewById(R.id.suggested_word);
-            suggestedText.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
-            suggestedText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getContext(),
-                            "You need to log in to get suggestion.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
 
-            suggestedToggle=view.findViewById(R.id.customSwitch);
-            suggestedToggle.setVisibility(View.GONE);
-
-            viceCheckBtn=view.findViewById(R.id.vice_check_btn);
-            viceCheckBtn.setClickable(false);
-            viceCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
 
             searchBtn=view.findViewById(R.id.search_button_container);
             searchBtn.setOnClickListener(new View.OnClickListener() {
