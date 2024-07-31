@@ -2,9 +2,12 @@
     <string name="app_name">FunSG</string>
     <string name="google_map_key">AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0</string>
     <string-array name="category_options">
-        <item>Sports</item>
-        <item>Arts</item>
-        <item>Outdoors</item>
+        <item>Creative Arts</item>
+        <item>Business Tech</item>
+        <item>Community Causes</item>
+        <item>Health Lifestyle</item>
+        <item>Lifelong Learning</item>
+        <item>Outdoor Hobbies</item>
     </string-array>
     <string-array name="category_options_group_list">
         <item>Own</item>

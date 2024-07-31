@@ -74,7 +74,7 @@ public class FirstLaunchLogin extends AppCompatActivity {
                     AuthLoginResponse authLoginResponse=response.body();
                     if(authLoginResponse!=null){
                         String token = authLoginResponse.getToken();
-                        String username=authLoginResponse.getUsername();
+                        String username=authLoginResponse.getUserName();
 
                         Log.d("Register", "Token: " + token);
                         Log.d("Register", "Username: " + username);

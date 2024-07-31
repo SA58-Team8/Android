@@ -11,13 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
 public class NavPersonFragment extends Fragment {
-    Button logOutBtn;
+    private Button logOutBtn;
+    private Button createGroupBtn;
+    private Button createEventBtn;
+    private TextView usernameText;
+    private TextView emailText;
+    private String username;
+    private String email;
 
     @Nullable
     @Override
@@ -29,6 +36,14 @@ public class NavPersonFragment extends Fragment {
     public void onStart(){
         super.onStart();
         View view = getView();
+
+        username = UserLoginStatus.getUsername(getContext());
+        email = UserLoginStatus.getEmail(getContext());
+
+        usernameText=view.findViewById(R.id.username);
+        emailText=view.findViewById(R.id.email);
+        usernameText.setText(username);
+        emailText.setText(email);
         if(view!=null){
             logOutBtn=view.findViewById(R.id.log_out_btn);
             logOutBtn.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +62,25 @@ public class NavPersonFragment extends Fragment {
 
                 }
             });
+
+            createGroupBtn=view.findViewById(R.id.create_new_group);
+            createGroupBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(),CreateGroup.class);
+                    startActivity(intent);
+                }
+            });
+            createEventBtn=view.findViewById(R.id.create_new_event);
+            createEventBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent=new Intent(getContext(),CreateEvent.class);
+                    startActivity(intent);
+                }
+            });
+
+
         }
     }
 }

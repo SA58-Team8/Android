@@ -3,7 +3,7 @@ package com.nus.iss.funsg;
 public class AuthLoginResponse {
     //this class is use for login validation
 
-    private String username;
+    private String userName;
     private String token;
     private long expiresIn;
 
@@ -22,11 +22,11 @@ public class AuthLoginResponse {
         this.expiresIn = expiresIn;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

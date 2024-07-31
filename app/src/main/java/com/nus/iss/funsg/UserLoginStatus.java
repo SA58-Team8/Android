@@ -54,4 +54,12 @@ public class UserLoginStatus {
         editor.putBoolean(KEY_IS_LOGGED_IN, false);
         editor.apply();
     }
+    public static String getUsername(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_USERNAME, "Username");
+    }
+    public static String getEmail(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_EMAIL, "abc123@example.com");
+    }
 }
