@@ -1,7 +1,6 @@
 package com.nus.iss.funsg;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,18 +9,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -31,7 +25,7 @@ public class FirstLaunchRegister extends AppCompatActivity {
     private EditText usernameText;
     private EditText emailText;
     private EditText passwordText;
-    private AuthSignUpService authSignUpService;
+    private AuthService authService;
     private String username;
     private String email;
     private String password;
@@ -56,8 +50,8 @@ public class FirstLaunchRegister extends AppCompatActivity {
         passwordText=findViewById(R.id.password_text);
         signUpBtn=findViewById(R.id.sign_up_submit_btn);
 
-        Retrofit retrofit = RetrofitClient.getClientNoToken("http://192.168.0.79:8080");
-        authSignUpService = retrofit.create(AuthSignUpService.class);
+        Retrofit retrofit = RetrofitClient.getClientNoToken(IPAddress.ipAddress);
+        authService = retrofit.create(AuthService.class);
 
         signUpBtn.setOnClickListener(view -> {
             username = usernameText.getText().toString();
@@ -72,7 +66,7 @@ public class FirstLaunchRegister extends AppCompatActivity {
         });
     }
     private void signUp(AuthSignUpRequest signUpRequest){
-        Call<AuthSignUpResponse> call = authSignUpService.signUp(signUpRequest);
+        Call<AuthSignUpResponse> call = authService.signUp(signUpRequest);
         call.enqueue(new Callback<AuthSignUpResponse>() {
             @Override
             public void onResponse(Call<AuthSignUpResponse> call, Response<AuthSignUpResponse> response) {
