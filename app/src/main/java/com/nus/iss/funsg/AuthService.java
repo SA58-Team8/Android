@@ -9,13 +9,13 @@ public interface AuthService {
             "Content-Type: application/json",
             "User-Agent: Android"
     })
-    @POST("/auth/signup")
+    @POST("auth/signup")
     Call<AuthSignUpResponse> signUp(@Body AuthSignUpRequest authSignUpRequest);
 
     @Headers({
             "Content-Type: application/json",
             "User-Agent: Android"
     })
-    @POST("/auth/login")
+    @POST("auth/login")
     Call<AuthLoginResponse> login(@Body AuthLoginRequest authRequest);
 }

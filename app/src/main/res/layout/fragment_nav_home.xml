@@ -107,7 +107,7 @@
                     android:layout_width="170dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="20dp"
-                    android:text="Vice Check"
+                    android:text="Vibe Check"
                     android:textSize="24sp"
                     android:textAllCaps="false"
                     android:textColor="@color/darkblue"
