@@ -62,4 +62,8 @@ public class UserLoginStatus {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_EMAIL, "abc123@example.com");
     }
+    public static String getToken(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_TOKEN, null);
+    }
 }

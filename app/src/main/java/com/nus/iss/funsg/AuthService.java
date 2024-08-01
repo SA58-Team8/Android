@@ -1,8 +1,12 @@
 package com.nus.iss.funsg;
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface AuthService {
     @Headers({
@@ -18,4 +22,18 @@ public interface AuthService {
     })
     @POST("auth/login")
     Call<AuthLoginResponse> login(@Body AuthLoginRequest authRequest);
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @POST("groups")
+    Call<Void> createGroup(@Body AuthCreateGroupRequest request);
+
+    @Multipart
+    @Headers({
+            "User-Agent: Android"
+    })
+    @POST("groups/groupImage")
+    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);
 }

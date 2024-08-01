@@ -38,7 +38,7 @@
     <LinearLayout
         android:layout_marginVertical="10dp"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="530dp"
         android:orientation="vertical"
         android:background="@drawable/event_block">
         <TextView
@@ -138,13 +138,30 @@
                     android:layout_width="52dp"
                     android:layout_height="60dp"
                     android:background="@drawable/upload"/>
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Image"
-                    android:textSize="25sp"
-                    android:textColor="@color/lightblack"/>
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload Image"
+                        android:textSize="25sp"
+                        android:textColor="@color/lightblack"/>
+                    <ProgressBar
+                        android:id="@+id/upload_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
+
 
             <Button
                 android:id="@+id/create_group_submit_btn"
