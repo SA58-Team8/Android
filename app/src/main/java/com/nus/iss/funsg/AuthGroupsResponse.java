@@ -6,16 +6,16 @@ public class AuthGroupsResponse {
     private String description;
     private Long categoryId;
     private String categoryName;
-    private String imageUrl;
+    private String profileImagePath;
     private String status;
 
-    public AuthGroupsResponse(Long id, String name, String description, Long categoryId, String categoryName, String imageUrl, String status) {
+    public AuthGroupsResponse(Long id, String name, String description, Long categoryId, String categoryName, String profileImagePath, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.imageUrl = imageUrl;
+        this.profileImagePath = profileImagePath;
         this.status = status;
     }
 
@@ -59,12 +59,12 @@ public class AuthGroupsResponse {
         this.categoryName = categoryName;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getProfileImagePath() {
+        return profileImagePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     public String getStatus() {

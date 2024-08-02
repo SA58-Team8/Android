@@ -36,7 +36,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         holder.nameTextView.setText(group.getName());
         holder.descriptionTextView.setText(group.getDescription());
         Glide.with(context)
-                .load(group.getImageUrl())
+                .load(group.getProfileImagePath())
                 .into(holder.imageView);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, GroupPage.class);
