@@ -190,9 +190,10 @@ public class CreateGroup extends AppCompatActivity {
 
                 if (response.isSuccessful()){
                     try{
-                        imageUrl = response.body().string();
+                        imageUrl = response.body().toString();
                         Toast.makeText(CreateGroup.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
-                    }catch (IOException e){
+                    }
+                    catch (Exception e){//before is IOException
                         Log.e("UploadImageFailed", "Error reading response body,1", e);
                         Toast.makeText(CreateGroup.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 

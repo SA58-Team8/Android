@@ -47,4 +47,16 @@ public interface AuthService {
     })
     @GET("categories/{categoryId}/groups")
     Call<List<AuthGroupsResponse>> getGroups(@Path("categoryId") Long categoryId);
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events")
+    Call<List<AuthEventsResponse>> getEvents();
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events/{eventId}")
+    Call<AuthEventsResponse> getEventDetails(@Path("eventId") long eventId);
 }

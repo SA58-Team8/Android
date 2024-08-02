@@ -9,7 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nus.iss.funsg.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private boolean isPreview;
@@ -35,12 +46,17 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private Button category5Btn;
     private Button category6Btn;
 
+    private RecyclerView recyclerView;
+    private EventAdapter eventAdapter;
+    private List<AuthEventsResponse> eventList = new ArrayList<>();
+
     public NavHomeFragment(){}
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-                return inflater.inflate(R.layout.fragment_nav_home, container, false);
+        View view =inflater.inflate(R.layout.fragment_nav_home, container, false);
+        return view;
 
 
     }
@@ -100,6 +116,13 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             category5Btn.setOnClickListener(this);
             category6Btn=view.findViewById(R.id.category_6);
             category6Btn.setOnClickListener(this);
+
+            
+            recyclerView = view.findViewById(R.id.recycler_view_events);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            eventAdapter = new EventAdapter(getContext(), eventList);
+            recyclerView.setAdapter(eventAdapter);
+            fetchEvents();
         }
     }
     @Override
@@ -128,5 +151,28 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
         intent.putExtra("categoryId",categoryId);
         intent.putExtra("categoryName",categoryName);
         startActivity(intent);
+    }
+    private void fetchEvents(){
+        Retrofit retrofit=RetrofitClient.getClientNoToken(IPAddress.ipAddress);
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.getEvents().enqueue(new Callback<List<AuthEventsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    eventList.addAll(response.body());
+                    eventAdapter.notifyDataSetChanged();
+                }
+                else{
+                    Log.e("EventsResponseError", "Failed to load events: " + response.message());
+                    Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                Log.e("EventsAcquireFailure", "Error fetching events: " + t.getMessage(), t);
+                Toast.makeText(getContext(), "Error fetching events", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
