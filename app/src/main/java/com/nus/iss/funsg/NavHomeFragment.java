@@ -17,8 +17,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.nus.iss.funsg.R;
 
-public class NavHomeFragment extends Fragment {
+public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private boolean isPreview;
 
     private TextView categoryText;
@@ -27,6 +28,12 @@ public class NavHomeFragment extends Fragment {
     private TextView suggestedText;
     private SwitchCompat suggestedToggle;
     private Button viceCheckBtn;
+    private Button category1Btn;
+    private Button category2Btn;
+    private Button category3Btn;
+    private Button category4Btn;
+    private Button category5Btn;
+    private Button category6Btn;
 
     public NavHomeFragment(){}
 
@@ -80,6 +87,46 @@ public class NavHomeFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
+            category1Btn=view.findViewById(R.id.category_1);
+            category1Btn.setOnClickListener(this);
+            category2Btn=view.findViewById(R.id.category_2);
+            category2Btn.setOnClickListener(this);
+            category3Btn=view.findViewById(R.id.category_3);
+            category3Btn.setOnClickListener(this);
+            category4Btn=view.findViewById(R.id.category_4);
+            category4Btn.setOnClickListener(this);
+            category5Btn=view.findViewById(R.id.category_5);
+            category5Btn.setOnClickListener(this);
+            category6Btn=view.findViewById(R.id.category_6);
+            category6Btn.setOnClickListener(this);
         }
+    }
+    @Override
+    public void onClick(View v) {
+        Long categoryId = 0L;
+        if(v.getId()==R.id.category_1){
+            categoryId = 1L;
+        }
+        else if(v.getId()==R.id.category_2){
+            categoryId = 2L;
+        }
+        else if(v.getId()==R.id.category_3){
+            categoryId = 3L;
+        }
+        else if(v.getId()==R.id.category_4){
+            categoryId = 4L;
+        }
+        else if(v.getId()==R.id.category_5){
+            categoryId = 5L;
+        }
+        else if(v.getId()==R.id.category_6){
+            categoryId = 6L;
+        }
+        String categoryName=((Button) v).getText().toString();
+        Intent intent = new Intent(getContext(),CategoryGroups.class);
+        intent.putExtra("categoryId",categoryId);
+        intent.putExtra("categoryName",categoryName);
+        startActivity(intent);
     }
 }

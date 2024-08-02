@@ -15,6 +15,7 @@ public class GroupPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_group_page);
+        long groupId = getIntent().getLongExtra("groupId", -1);
 
     }
 }

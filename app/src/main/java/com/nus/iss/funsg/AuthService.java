@@ -1,12 +1,16 @@
 package com.nus.iss.funsg;
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface AuthService {
     @Headers({
@@ -36,4 +40,11 @@ public interface AuthService {
     })
     @POST("groups/groupImage")
     Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);
+
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("categories/{categoryId}/groups")
+    Call<List<AuthGroupsResponse>> getGroups(@Path("categoryId") Long categoryId);
 }
