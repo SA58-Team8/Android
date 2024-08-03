@@ -190,7 +190,7 @@ public class CreateGroup extends AppCompatActivity {
 
                 if (response.isSuccessful()){
                     try{
-                        imageUrl = response.body().toString();
+                        imageUrl = response.body().string();
                         Toast.makeText(CreateGroup.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
                     }
                     catch (Exception e){//before is IOException
