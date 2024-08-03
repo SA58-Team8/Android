@@ -56,7 +56,7 @@ public class SearchResult extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eventAdapter = new EventAdapter(this, eventsList,true);
+        eventAdapter = new EventAdapter(this, eventsList,1);
         recyclerView.setAdapter(eventAdapter);
 
         searchEdit=findViewById(R.id.search_result_search_bar);

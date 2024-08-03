@@ -13,6 +13,14 @@ public class UserLoginStatus {
     private static final String KEY_TOKEN = "token";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_USERID = "userId";
+
+    public static void saveUserId(Context context,long userId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(KEY_USERID, userId);
+        editor.apply();
+    }
 
     public static void saveLoginStatus(Context context, boolean isLoggedIn){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -65,5 +73,9 @@ public class UserLoginStatus {
     public static String getToken(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_TOKEN, null);
+    }
+    public static Long getUserId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(KEY_USERID,0L);
     }
 }

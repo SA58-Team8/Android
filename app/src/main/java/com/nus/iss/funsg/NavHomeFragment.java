@@ -127,7 +127,7 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             
             recyclerView = view.findViewById(R.id.recycler_view_events);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            eventAdapter = new EventAdapter(getContext(), eventList);
+            eventAdapter = new EventAdapter(getContext(), eventList,0);
             recyclerView.setAdapter(eventAdapter);
             fetchEvents();
         }

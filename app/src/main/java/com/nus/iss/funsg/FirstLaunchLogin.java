@@ -76,8 +76,8 @@ public class FirstLaunchLogin extends AppCompatActivity {
                         String token = authLoginResponse.getToken();
                         String username=authLoginResponse.getUserName();
 
-                        Log.d("Register", "Token: " + token);
-                        Log.d("Register", "Username: " + username);
+                        Log.d("Login", "Token: " + token);
+                        Log.d("Login", "Username: " + username);
                         Toast.makeText(FirstLaunchLogin.this,"Login successfully",Toast.LENGTH_SHORT).show();
 
 

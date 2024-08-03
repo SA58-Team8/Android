@@ -67,4 +67,16 @@ public interface AuthService {
     @GET("search")
     Call<List<AuthEventsResponse>> searchEvents(@Query("query") String query,
                                                 @Query("client") String client);
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("users/groups")
+    Call<List<AuthGroupsResponse>> getGroupsJoined();
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("users/profile")
+    Call<AuthUserProfileResponse> getUserProfile();
 }

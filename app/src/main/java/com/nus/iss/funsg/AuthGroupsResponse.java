@@ -1,5 +1,7 @@
 package com.nus.iss.funsg;
 
+import java.util.List;
+
 public class AuthGroupsResponse {
     private Long id;
     private String name;
@@ -8,8 +10,10 @@ public class AuthGroupsResponse {
     private String categoryName;
     private String profileImagePath;
     private String status;
+    private AuthUserProfileResponse host;
+    private List<AuthUserProfileResponse> members;
 
-    public AuthGroupsResponse(Long id, String name, String description, Long categoryId, String categoryName, String profileImagePath, String status) {
+    public AuthGroupsResponse(Long id, String name, String description, Long categoryId, String categoryName, String profileImagePath, String status, AuthUserProfileResponse host, List<AuthUserProfileResponse> members) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -17,6 +21,8 @@ public class AuthGroupsResponse {
         this.categoryName = categoryName;
         this.profileImagePath = profileImagePath;
         this.status = status;
+        this.host = host;
+        this.members = members;
     }
 
     public Long getId() {
@@ -73,5 +79,21 @@ public class AuthGroupsResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public AuthUserProfileResponse getHost() {
+        return host;
+    }
+
+    public void setHost(AuthUserProfileResponse host) {
+        this.host = host;
+    }
+
+    public List<AuthUserProfileResponse> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<AuthUserProfileResponse> members) {
+        this.members = members;
     }
 }
