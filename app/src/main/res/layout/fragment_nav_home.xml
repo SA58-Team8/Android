@@ -35,6 +35,7 @@
                     android:paddingStart="1dp"
                     android:paddingEnd="10dp"
                     android:inputType="text"
+                    android:imeOptions="actionDone"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

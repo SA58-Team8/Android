@@ -31,7 +31,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -127,7 +130,24 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         Glide.with(this).load(event.getCreatedBy().getProfileImage()).into(hostImage);
 
         //set participants photo;
-
+        ImageView person1=findViewById(R.id.person_1);
+        ImageView person2=findViewById(R.id.person_2);
+        ImageView person3=findViewById(R.id.person_3);
+        ImageView person4=findViewById(R.id.person_4);
+        ImageView person5=findViewById(R.id.person_5);
+        List<ImageView> personList=new ArrayList<>();
+        personList.add(person1);
+        personList.add(person2);
+        personList.add(person3);
+        personList.add(person4);
+        personList.add(person5);
+        for(int i =0;i<event.getEventParticipants().size();i++){
+            Glide.with(this).load(event.getEventParticipants().get(i).getProfileImage()).into(personList.get(i));
+        }
+        TextView goingNote=findViewById(R.id.going_note);
+        if(event.getEventParticipants().size()>=5){
+            goingNote.setVisibility(TextView.VISIBLE); //set visible
+        }
     }
     private void showEventLocationOnMap(String locationName){
         //locationName="Merlion Park";

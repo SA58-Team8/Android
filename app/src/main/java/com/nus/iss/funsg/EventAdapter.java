@@ -20,16 +20,28 @@ import java.util.List;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder>{
     private List<AuthEventsResponse> eventList;
     private Context context;
+    private boolean isSearch;
 
     public EventAdapter(Context context, List<AuthEventsResponse> eventList) {
         this.context = context;
         this.eventList = eventList;
     }
+    public EventAdapter(Context context, List<AuthEventsResponse> eventList,boolean isSearch) {
+        this.context = context;
+        this.eventList = eventList;
+        this.isSearch=isSearch;
+    }
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_list_upcoming,parent,false);
-        return new EventViewHolder(view);
+        if(isSearch){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item_search,parent,false);
+            return new EventViewHolder(view);
+        }
+        else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_list_upcoming,parent,false);
+            return new EventViewHolder(view);
+        }
     }
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position){

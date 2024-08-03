@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface AuthService {
     @Headers({
@@ -59,4 +60,11 @@ public interface AuthService {
     })
     @GET("events/{eventId}")
     Call<AuthEventsResponse> getEventDetails(@Path("eventId") long eventId);
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("search")
+    Call<List<AuthEventsResponse>> searchEvents(@Query("query") String query,
+                                                @Query("client") String client);
 }

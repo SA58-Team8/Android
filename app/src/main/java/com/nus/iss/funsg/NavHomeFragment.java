@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private Button category4Btn;
     private Button category5Btn;
     private Button category6Btn;
+    private EditText searchText;
 
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
@@ -94,12 +96,17 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             }
 
 
-
+            searchText=view.findViewById(R.id.search_bar);
             searchBtn=view.findViewById(R.id.search_button_container);
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String query = searchText.getText().toString().trim();
+                    if (query.isEmpty()) {
+                        return;
+                    }
                     Intent intent=new Intent(requireContext(),SearchResult.class);
+                    intent.putExtra("query", query);
                     startActivity(intent);
                 }
             });
