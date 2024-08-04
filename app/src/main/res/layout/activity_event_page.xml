@@ -31,7 +31,7 @@
                 android:id="@+id/event_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="EventName"
+                android:text=""
                 android:textSize="40sp"
                 android:layout_margin="10dp"
                 android:textStyle="bold"
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
-                    android:text="Tuseday,Aug 21th,2024"
+                    android:text=""
                     android:textColor="@color/lightblack"
                     android:textSize="25sp"/>
             </LinearLayout>
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
-                    android:text="The Game Cafe"
+                    android:text=""
                     android:textColor="@color/lightblack"
                     android:textSize="25sp"/>
             </LinearLayout>
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:text="GroupName"
+                android:text=""
                 android:textSize="30sp"
                 android:textColor="@color/darkblue"/>
             <TextView
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:text="We are a group of board game"
+                android:text=""
                 android:textSize="22sp"
                 android:textColor="@color/lightblack"/>
             <androidx.constraintlayout.widget.ConstraintLayout

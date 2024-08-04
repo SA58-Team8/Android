@@ -34,14 +34,27 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         int eventMaxParticipants=event.getMaxParticipants();
         holder.eventParticipants.setText(String.valueOf(eventParticipantsNumber)+"/"+String.valueOf(eventMaxParticipants));
         holder.eventViewMoreDetails.setPaintFlags(holder.eventViewMoreDetails.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, EventDashboard.class);
-                intent.putExtra("eventId",event.getId());
-                context.startActivity(intent);
-            }
-        });
+        if(event.getCreatedBy().getUserId()==UserLoginStatus.getUserId(context)){
+            holder.eventViewMoreDetails.setText("Event DashBoard");
+            holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, EventDashboard.class);
+                    intent.putExtra("eventId",event.getId());
+                    context.startActivity(intent);
+                }
+            });
+        }
+        else{
+            holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, EventPage.class);
+                    intent.putExtra("eventId",event.getId());
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override

@@ -32,7 +32,7 @@
                 android:id="@+id/event_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Activity Title"
+                android:text=""
                 android:textColor="@color/darkgrey"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/lightblack"
-                    android:text="Activity Time"
+                    android:text=""
                     android:layout_gravity="right"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:textColor="@color/lightblack"
-            android:text="Activity Description"
+            android:text=""
             android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>

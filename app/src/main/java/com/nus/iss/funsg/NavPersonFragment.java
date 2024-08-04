@@ -144,6 +144,8 @@ public class NavPersonFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null){
                     int GroupNumber=response.body().size();
                     groupJoinedNumberText.setText(String.valueOf(GroupNumber));
+                } else if (response.isSuccessful() && response.body() == null) {
+                    groupJoinedNumberText.setText("0");
                 }
             }
             @Override
@@ -159,6 +161,9 @@ public class NavPersonFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null){
                     int GroupNumber=response.body().size();
                     eventJoinedNumberText.setText(String.valueOf(GroupNumber));
+                }
+                else if (response.isSuccessful() && response.body() == null) {
+                    eventJoinedNumberText.setText("0");
                 }
             }
 

@@ -36,22 +36,22 @@
         android:paddingHorizontal="15dp">
         <TextView
             android:id="@+id/username"
-            android:layout_width="wrap_content"
+            android:layout_width="255dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:text="Username"
+            android:text=""
             android:textColor="@color/darkgrey"
             android:textStyle="bold"
-            android:textSize="50sp"
+            android:textSize="40sp"
             />
         <TextView
             android:id="@+id/email"
-            android:layout_width="wrap_content"
+            android:layout_width="255dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/username"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:text="abc123@example.com"
+            android:text=""
             android:textColor="@color/lightblack"
             android:textStyle="italic"
             android:textSize="24sp"
