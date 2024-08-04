@@ -87,4 +87,11 @@ public interface AuthService {
     })
     @POST("events/{groupId}/events")
     Call<Void> createEvent(@Path("groupId") long groupId, @Body AuthCreateEventRequest eventRequest);
+
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("users/events")
+    Call<List<AuthEventsResponse>> getEventsJoined();
 }

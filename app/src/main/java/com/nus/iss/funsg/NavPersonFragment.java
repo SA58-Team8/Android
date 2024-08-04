@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -38,7 +40,10 @@ public class NavPersonFragment extends Fragment {
     private String email;
 
     private ImageView userImage;
-
+    private LinearLayout groupJoinedBtn;
+    private LinearLayout eventJoinedBtn;
+    private TextView groupJoinedNumberText;
+    private TextView eventJoinedNumberText;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,13 +92,32 @@ public class NavPersonFragment extends Fragment {
         });
 
         userImage=view.findViewById(R.id.user_profile_image);
-        fetchUserProfile();
+        groupJoinedBtn=view.findViewById(R.id.group_joined_btn);
+        eventJoinedBtn=view.findViewById(R.id.event_joined_btn);
+        groupJoinedNumberText=view.findViewById(R.id.group_joined_number);
+        eventJoinedNumberText=view.findViewById(R.id.event_joined_number);
+        groupJoinedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(), GroupList.class);
+                startActivity(intent);
+            }
+        });
+        eventJoinedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(), EventList.class);
+                startActivity(intent);
+            }
+        });
+
+        fetchUserInfo();
 
     }
-    private void fetchUserProfile(){
-        Retrofit retrofit=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
-        AuthService authService=retrofit.create(AuthService.class);
-        authService.getUserProfile().enqueue(new Callback<AuthUserProfileResponse>() {
+    private void fetchUserInfo(){
+        Retrofit retrofitImage=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authServiceImage=retrofitImage.create(AuthService.class);
+        authServiceImage.getUserProfile().enqueue(new Callback<AuthUserProfileResponse>() {
             @Override
             public void onResponse(Call<AuthUserProfileResponse> call, Response<AuthUserProfileResponse> response) {
                 if (response.isSuccessful() && response.body() != null){
@@ -110,6 +134,37 @@ public class NavPersonFragment extends Fragment {
             public void onFailure(Call<AuthUserProfileResponse> call, Throwable t) {
                 Log.e("UserResponseFailure", "Error fetching: " + t.getMessage(), t);
                 Toast.makeText(getContext(), "Error fetching user image", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Retrofit retrofitGroup=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authServiceGroup=retrofitGroup.create(AuthService.class);
+        authServiceGroup.getGroupsJoined().enqueue(new Callback<List<AuthGroupsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthGroupsResponse>> call, Response<List<AuthGroupsResponse>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    int GroupNumber=response.body().size();
+                    groupJoinedNumberText.setText(String.valueOf(GroupNumber));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<AuthGroupsResponse>> call, Throwable t) {
+                Log.e("ResponseGroupFailure", "Failed to load Group: " + t.getMessage(), t);
+            }
+        });
+        Retrofit retrofitEvent=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authServiceEvent=retrofitEvent.create(AuthService.class);
+        authServiceEvent.getEventsJoined().enqueue(new Callback<List<AuthEventsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    int GroupNumber=response.body().size();
+                    eventJoinedNumberText.setText(String.valueOf(GroupNumber));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                Log.e("ResponseEventFailure", "Failed to load Event: " + t.getMessage(), t);
             }
         });
     }

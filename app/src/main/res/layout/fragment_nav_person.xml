@@ -78,17 +78,21 @@
         android:paddingVertical="20dp"
         android:background="@color/white">
         <LinearLayout
+            android:id="@+id/group_joined_btn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/group_joined_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:text="3"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="50sp"
                 android:textColor="@color/black"/>
@@ -104,17 +108,21 @@
             android:layout_height="match_parent"
             android:background="@color/lightblack" />
         <LinearLayout
+            android:id="@+id/event_joined_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/event_joined_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:text="0"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="50sp"
                 android:textColor="@color/black"/>

@@ -12,12 +12,12 @@ public class AuthEventsResponse {
     private Long groupId;
     private String groupName;
     private String createdAt;
-    private User createdBy;
+    private AuthUserProfileResponse createdBy;
     private String profileImagePath;
     private int maxParticipants;
-    private List<User> eventParticipants;
+    private List<AuthUserProfileResponse> eventParticipants;
 
-    public AuthEventsResponse(Long id, String name, String description, String start, String end, String location, Long groupId, String groupName, String createdAt, User createdBy, String profileImagePath, int maxParticipants, List<User> eventParticipants) {
+    public AuthEventsResponse(Long id, String name, String description, String start, String end, String location, Long groupId, String groupName, String createdAt, AuthUserProfileResponse createdBy, String profileImagePath, int maxParticipants, List<AuthUserProfileResponse> eventParticipants) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -105,11 +105,11 @@ public class AuthEventsResponse {
         this.createdAt = createdAt;
     }
 
-    public User getCreatedBy() {
+    public AuthUserProfileResponse getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(AuthUserProfileResponse createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -129,69 +129,11 @@ public class AuthEventsResponse {
         this.maxParticipants = maxParticipants;
     }
 
-    public List<User> getEventParticipants() {
+    public List<AuthUserProfileResponse> getEventParticipants() {
         return eventParticipants;
     }
 
-    public void setEventParticipants(List<User> eventParticipants) {
+    public void setEventParticipants(List<AuthUserProfileResponse> eventParticipants) {
         this.eventParticipants = eventParticipants;
     }
-
-    public static class User{
-        private long userId;
-        private String name;
-        private String email;
-        private String profileImage;
-        private String createdAt;
-
-        public User(long userId, String name, String email, String profileImage, String createdAt) {
-            this.userId = userId;
-            this.name = name;
-            this.email = email;
-            this.profileImage = profileImage;
-            this.createdAt = createdAt;
-        }
-
-        public long getUserId() {
-            return userId;
-        }
-
-        public void setUserId(long userId) {
-            this.userId = userId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getProfileImage() {
-            return profileImage;
-        }
-
-        public void setProfileImage(String profileImage) {
-            this.profileImage = profileImage;
-        }
-
-        public String getCreatedAt() {
-            return createdAt;
-        }
-
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
-    }
-
-
 }
