@@ -79,4 +79,12 @@ public interface AuthService {
     })
     @GET("users/profile")
     Call<AuthUserProfileResponse> getUserProfile();
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @POST("events/{groupId}/events")
+    Call<Void> createEvent(@Path("groupId") long groupId, @Body AuthCreateEventRequest eventRequest);
 }
