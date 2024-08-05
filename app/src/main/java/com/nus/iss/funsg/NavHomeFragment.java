@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.nus.iss.funsg.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class NavHomeFragment extends Fragment implements View.OnClickListener{
+public class NavHomeFragment extends Fragment implements View.OnClickListener {
     private boolean isPreview;
 
     private TextView categoryText;
@@ -39,7 +38,7 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private FrameLayout searchBtn;
     private TextView suggestedText;
     private SwitchCompat suggestedToggle;
-    private Button viceCheckBtn;
+    private Button vibeCheckBtn;
     private Button category1Btn;
     private Button category2Btn;
     private Button category3Btn;
@@ -52,52 +51,53 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private EventAdapter eventAdapter;
     private List<AuthEventsResponse> eventList = new ArrayList<>();
 
-    public NavHomeFragment(){}
+    public NavHomeFragment() {}
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_nav_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_nav_home, container, false);
         return view;
-
-
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         View view = getView();
-        if(view!=null){
-            //set underline
-            categoryText=view.findViewById(R.id.main_text_category);
+        if (view != null) {
+            // Set underline
+            categoryText = view.findViewById(R.id.main_text_category);
             categoryText.setPaintFlags(categoryText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            upcomingEventText=view.findViewById(R.id.main_text_upcoming_event);
+            upcomingEventText = view.findViewById(R.id.main_text_upcoming_event);
             upcomingEventText.setPaintFlags(upcomingEventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
             if (getArguments() != null) {
                 isPreview = getArguments().getBoolean("isPreview", false);
-                suggestedText=view.findViewById(R.id.suggested_word);
-                suggestedText.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
-                suggestedText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getContext(),
-                                "You need to log in to get suggestion.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                suggestedToggle=view.findViewById(R.id.customSwitch);
-                suggestedToggle.setVisibility(View.GONE);
-
-                viceCheckBtn=view.findViewById(R.id.vice_check_btn);
-                viceCheckBtn.setClickable(false);
-                viceCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
             }
 
+            suggestedText = view.findViewById(R.id.suggested_word);
+            suggestedText.setTextColor(ContextCompat.getColor(getContext(), R.color.lightblack));
+            suggestedText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getContext(), "You need to log in to get suggestion.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            searchText=view.findViewById(R.id.search_bar);
-            searchBtn=view.findViewById(R.id.search_button_container);
+            suggestedToggle = view.findViewById(R.id.customSwitch);
+            suggestedToggle.setVisibility(View.GONE);
+
+            vibeCheckBtn = view.findViewById(R.id.vibe_check_btn);
+            vibeCheckBtn.setTextColor(ContextCompat.getColor(getContext(), R.color.lightblack));
+            vibeCheckBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchWordSelector();
+                }
+            });
+
+            searchText = view.findViewById(R.id.search_bar);
+            searchBtn = view.findViewById(R.id.search_button_container);
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,71 +105,66 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
                     if (query.isEmpty()) {
                         return;
                     }
-                    Intent intent=new Intent(requireContext(),SearchResult.class);
+                    Intent intent = new Intent(requireContext(), SearchResult.class);
                     intent.putExtra("query", query);
                     startActivity(intent);
                 }
             });
 
-            category1Btn=view.findViewById(R.id.category_1);
+            category1Btn = view.findViewById(R.id.category_1);
             category1Btn.setOnClickListener(this);
-            category2Btn=view.findViewById(R.id.category_2);
+            category2Btn = view.findViewById(R.id.category_2);
             category2Btn.setOnClickListener(this);
-            category3Btn=view.findViewById(R.id.category_3);
+            category3Btn = view.findViewById(R.id.category_3);
             category3Btn.setOnClickListener(this);
-            category4Btn=view.findViewById(R.id.category_4);
+            category4Btn = view.findViewById(R.id.category_4);
             category4Btn.setOnClickListener(this);
-            category5Btn=view.findViewById(R.id.category_5);
+            category5Btn = view.findViewById(R.id.category_5);
             category5Btn.setOnClickListener(this);
-            category6Btn=view.findViewById(R.id.category_6);
+            category6Btn = view.findViewById(R.id.category_6);
             category6Btn.setOnClickListener(this);
 
-            
             recyclerView = view.findViewById(R.id.recycler_view_events);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            eventAdapter = new EventAdapter(getContext(), eventList,0);
+            eventAdapter = new EventAdapter(getContext(), eventList, 0);
             recyclerView.setAdapter(eventAdapter);
             fetchEvents();
         }
     }
+
     @Override
     public void onClick(View v) {
         Long categoryId = 0L;
-        if(v.getId()==R.id.category_1){
+        if (v.getId() == R.id.category_1) {
             categoryId = 1L;
-        }
-        else if(v.getId()==R.id.category_2){
+        } else if (v.getId() == R.id.category_2) {
             categoryId = 2L;
-        }
-        else if(v.getId()==R.id.category_3){
+        } else if (v.getId() == R.id.category_3) {
             categoryId = 3L;
-        }
-        else if(v.getId()==R.id.category_4){
+        } else if (v.getId() == R.id.category_4) {
             categoryId = 4L;
-        }
-        else if(v.getId()==R.id.category_5){
+        } else if (v.getId() == R.id.category_5) {
             categoryId = 5L;
-        }
-        else if(v.getId()==R.id.category_6){
+        } else if (v.getId() == R.id.category_6) {
             categoryId = 6L;
         }
-        String categoryName=((Button) v).getText().toString();
-        Intent intent = new Intent(getContext(),CategoryGroups.class);
-        intent.putExtra("categoryId",categoryId);
-        intent.putExtra("categoryName",categoryName);
+        String categoryName = ((Button) v).getText().toString();
+        Intent intent = new Intent(getContext(), CategoryGroups.class);
+        intent.putExtra("categoryId", categoryId);
+        intent.putExtra("categoryName", categoryName);
         startActivity(intent);
     }
-    private void fetchEvents(){
-        Retrofit retrofit=RetrofitClient.getClientNoToken(IPAddress.ipAddress);
-        AuthService authService=retrofit.create(AuthService.class);
+
+    private void fetchEvents() {
+        Retrofit retrofit = RetrofitClient.getClientNoToken(IPAddress.ipAddress);
+        AuthService authService = retrofit.create(AuthService.class);
         authService.getEvents().enqueue(new Callback<List<AuthEventsResponse>>() {
             @Override
             public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     eventList.addAll(response.body());
                     eventAdapter.notifyDataSetChanged();
-                }
-                else{
+                } else {
                     Log.e("EventsResponseError", "Failed to load events: " + response.message());
                     Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
                 }
@@ -181,5 +176,10 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getContext(), "Error fetching events", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void launchWordSelector() {
+        Intent intent = new Intent(getContext(), WordSelectorActivity.class);
+        startActivity(intent);
     }
 }
