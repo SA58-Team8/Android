@@ -4,10 +4,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.OkHttpClient;
 
 public class RetrofitClient {
-    private static Retrofit retrofit = null;
-    private static Retrofit retrofitWithToken = null;
+
     public static Retrofit getClientNoToken(String baseUrl) {
-        retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -17,7 +16,7 @@ public class RetrofitClient {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new AuthInterceptor(token))
                 .build();
-        retrofitWithToken = new Retrofit.Builder()
+        Retrofit retrofitWithToken = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())

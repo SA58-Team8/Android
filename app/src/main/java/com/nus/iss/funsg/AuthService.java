@@ -52,8 +52,20 @@ public interface AuthService {
     @Headers({
             "User-Agent: Android"
     })
+    @GET("groups/{groupId}")
+    Call<AuthGroupsResponse> getGroupDetails(@Path("groupId") long groupId);
+
+    @Headers({
+            "User-Agent: Android"
+    })
     @GET("events")
     Call<List<AuthEventsResponse>> getEvents();
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events/recommendations")
+    Call<List<AuthEventsResponse>> getEventsRecommendations();
 
     @Headers({
             "User-Agent: Android"
@@ -94,4 +106,10 @@ public interface AuthService {
     })
     @GET("users/events")
     Call<List<AuthEventsResponse>> getEventsJoined();
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events/{groupId}/events")
+    Call<List<AuthEventsResponse>> getGroupEvents(@Path("groupId") long groupId);
 }

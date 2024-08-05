@@ -14,6 +14,18 @@ public class UserLoginStatus {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USERID = "userId";
+    private static final String KEY_SUGGESTED="suggested";
+
+    public static void saveSuggested(Context context,boolean suggested){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY_SUGGESTED, suggested);
+        editor.apply();
+    }
+    public static boolean getSuggested(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(KEY_SUGGESTED,false);
+    }
 
     public static void saveUserId(Context context,long userId){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -60,6 +72,7 @@ public class UserLoginStatus {
         editor.remove(KEY_USERNAME);
         editor.remove(KEY_EMAIL);
         editor.putBoolean(KEY_IS_LOGGED_IN, false);
+        editor.remove(KEY_SUGGESTED);
         editor.apply();
     }
     public static String getUsername(Context context){

@@ -38,11 +38,15 @@ public class ModifyEvent extends AppCompatActivity {
     private TextView endDateEditText;
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
+    private long eventId;
+    private int existingParticipants;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_modify_event);
+        eventId=getIntent().getLongExtra("eventId",0L);
+        existingParticipants=getIntent().getIntExtra("existingParticipants",0);
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), "AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0");
         }

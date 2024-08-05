@@ -18,6 +18,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView
+                android:id="@+id/group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GroupName"
@@ -30,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp">
                 <ImageView
+                    android:id="@+id/group_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="10dp"/>
@@ -56,6 +58,7 @@
                 android:textStyle="bold"
                 android:textSize="36sp"/>
             <TextView
+                android:id="@+id/group_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="22dp"
@@ -71,16 +74,17 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/paleblue">
-                <LinearLayout
-                    android:id="@+id/horizontal_container"
-                    android:layout_width="wrap_content"
+                android:background="#E1ECF0"
+                android:paddingLeft="10dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/event_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-            </HorizontalScrollView>
+                    />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -91,15 +95,16 @@
                 android:textStyle="bold"
                 android:textSize="36sp"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:orientation="horizontal"
                 android:layout_marginHorizontal="22dp">
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/members_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-
-                </LinearLayout>
+                </androidx.recyclerview.widget.RecyclerView>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -126,12 +131,12 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comment_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="22dp">
-            <!-- this is comments-->
-            </LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
     </ScrollView>
     <LinearLayout

@@ -104,7 +104,7 @@
                         />
                 </LinearLayout>
                 <Button
-                    android:id="@+id/vice_check_btn"
+                    android:id="@+id/vibe_check_btn"
                     android:layout_width="170dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="20dp"

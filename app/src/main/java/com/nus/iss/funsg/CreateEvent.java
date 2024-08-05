@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,7 @@ public class CreateEvent extends AppCompatActivity {
     private LinearLayout uploadImageBtn;
     private Button eventSubmitBtn;
     private AuthService authService;
+    private ImageButton backBtn;
 
     private long groupId;
     @Override
@@ -86,6 +88,14 @@ public class CreateEvent extends AppCompatActivity {
         eventDescriptionEditText = findViewById(R.id.event_description);
         attendeeEditText = findViewById(R.id.event_attendees);
         eventSubmitBtn = findViewById(R.id.event_submit);
+        backBtn=findViewById(R.id.back_button_create_event);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), "AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0");

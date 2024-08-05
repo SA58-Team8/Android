@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private FrameLayout searchBtn;
     private TextView suggestedText;
     private SwitchCompat suggestedToggle;
-    private Button viceCheckBtn;
+    private Button vibeCheckBtn;
     private Button category1Btn;
     private Button category2Btn;
     private Button category3Btn;
@@ -73,26 +74,40 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             categoryText.setPaintFlags(categoryText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             upcomingEventText=view.findViewById(R.id.main_text_upcoming_event);
             upcomingEventText.setPaintFlags(upcomingEventText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            suggestedToggle=view.findViewById(R.id.customSwitch);
+            vibeCheckBtn=view.findViewById(R.id.vibe_check_btn);
+            suggestedText=view.findViewById(R.id.suggested_word);
 
+            //it means that from launch page to click preview.
             if (getArguments() != null) {
                 isPreview = getArguments().getBoolean("isPreview", false);
-                suggestedText=view.findViewById(R.id.suggested_word);
-                suggestedText.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
-                suggestedText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getContext(),
-                                "You need to log in to get suggestion.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
 
-                suggestedToggle=view.findViewById(R.id.customSwitch);
-                suggestedToggle.setVisibility(View.GONE);
-
-                viceCheckBtn=view.findViewById(R.id.vice_check_btn);
-                viceCheckBtn.setClickable(false);
-                viceCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
+                if(isPreview){
+                    suggestedToggle.setVisibility(View.GONE);
+                    vibeCheckBtn.setClickable(false);
+                    vibeCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
+                    suggestedText.setTextColor(ContextCompat.getColor(getContext(),R.color.lightblack));
+                    suggestedText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getContext(),
+                                    "You need to log in to get suggestion.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else {
+                    suggestedToggle.setVisibility(View.VISIBLE);
+                    suggestedToggle.setChecked(true);
+                    vibeCheckBtn.setClickable(true);
+                    vibeCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.darkblue));
+                }
+            }
+            else {
+                suggestedToggle.setVisibility(View.VISIBLE);
+                suggestedToggle.setChecked(UserLoginStatus.getSuggested(getContext()));
+                vibeCheckBtn.setClickable(true);
+                vibeCheckBtn.setTextColor(ContextCompat.getColor(getContext(),R.color.darkblue));
             }
 
 
@@ -129,7 +144,15 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             eventAdapter = new EventAdapter(getContext(), eventList,0);
             recyclerView.setAdapter(eventAdapter);
-            fetchEvents();
+            fetchEvents(suggestedToggle.isChecked());
+            suggestedToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    UserLoginStatus.saveSuggested(getContext(),isChecked);
+                    fetchEvents(isChecked);
+                }
+            });
+
         }
     }
     @Override
@@ -159,27 +182,56 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
         intent.putExtra("categoryName",categoryName);
         startActivity(intent);
     }
-    private void fetchEvents(){
-        Retrofit retrofit=RetrofitClient.getClientNoToken(IPAddress.ipAddress);
-        AuthService authService=retrofit.create(AuthService.class);
-        authService.getEvents().enqueue(new Callback<List<AuthEventsResponse>>() {
-            @Override
-            public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    eventList.addAll(response.body());
-                    eventAdapter.notifyDataSetChanged();
+    private void fetchEvents(boolean isRecommended){
+        if(isRecommended){
+            Retrofit retrofit=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+            AuthService authService=retrofit.create(AuthService.class);
+            authService.getEventsRecommendations().enqueue(new Callback<List<AuthEventsResponse>>() {
+                @Override
+                public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        eventList.clear();
+                        eventList.addAll(response.body());
+                        eventAdapter.updateEvents(new ArrayList<>(eventList));
+                    }
+                    else{
+                        Log.e("EventsResponseError", "Failed to load events: " + response.message());
+                        Toast.makeText(getContext(), "You have not finished your test", Toast.LENGTH_SHORT).show();
+                        suggestedToggle.setChecked(false);
+                    }
                 }
-                else{
-                    Log.e("EventsResponseError", "Failed to load events: " + response.message());
-                    Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
-                Log.e("EventsAcquireFailure", "Error fetching events: " + t.getMessage(), t);
-                Toast.makeText(getContext(), "Error fetching events", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                    Log.e("EventsAcquireFailure", "Error fetching events: " + t.getMessage(), t);
+                    Toast.makeText(getContext(), "Error fetching events", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+        else {
+            Retrofit retrofit=RetrofitClient.getClientNoToken(IPAddress.ipAddress);
+            AuthService authService=retrofit.create(AuthService.class);
+            authService.getEvents().enqueue(new Callback<List<AuthEventsResponse>>() {
+                @Override
+                public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        eventList.clear();
+                        eventList.addAll(response.body());
+                        eventAdapter.updateEvents(new ArrayList<>(eventList));
+                    }
+                    else{
+                        Log.e("EventsResponseError", "Failed to load events: " + response.message());
+                        Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                    Log.e("EventsAcquireFailure", "Error fetching events: " + t.getMessage(), t);
+                    Toast.makeText(getContext(), "Error fetching events", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
