@@ -1,12 +1,14 @@
 package com.nus.iss.funsg;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -89,10 +92,26 @@ public class GroupPage extends AppCompatActivity {
                 .load(group.getProfileImagePath())
                 .into(profileImageView);
 
-
-//        GroupAdapterPageMember groupAdapterPageMember=new GroupAdapterPageMember(group.getMembers());
-//        membersRecyclerView.setAdapter(groupAdapterPageMember);
-//        membersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        List<AuthUserProfileResponse> MemberDisplay=new ArrayList<>();
+        ConstraintLayout virtualMember=findViewById(R.id.virtual_member);
+        if(group.getMembers().size()>6){
+            for(int i = 0;i<5;i++){
+                MemberDisplay.add(group.getMembers().get(i));
+            }
+            virtualMember.setVisibility(View.VISIBLE);
+        }
+        else{
+            MemberDisplay.addAll(group.getMembers());
+            virtualMember.setVisibility(View.GONE);
+        }
+        GroupAdapterPageMember groupAdapterPageMember=new GroupAdapterPageMember(MemberDisplay,this);
+        membersRecyclerView.setAdapter(groupAdapterPageMember);
+        membersRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false){
+            @Override
+            public boolean canScrollHorizontally(){
+                return false;
+            }
+        });
     }
 
     private void displayEvents(List<AuthEventsResponse> events){
