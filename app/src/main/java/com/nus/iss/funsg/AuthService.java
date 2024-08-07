@@ -147,4 +147,11 @@ public interface AuthService {
     })
     @POST("events/{groupId}/eventImage")
     Call<ResponseBody> uploadEventImage(@Path("groupId") long groupId,@Part MultipartBody.Part file);
+
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @DELETE("events/{eventId}")
+    Call<Void> deleteEvent(@Path("eventId") long eventId);
 }

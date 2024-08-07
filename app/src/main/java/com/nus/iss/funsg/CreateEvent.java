@@ -175,7 +175,10 @@ public class CreateEvent extends AppCompatActivity {
             String formattedStartDate = AuthCreateEventRequest.formatDateTime(startDateTime);
             String formattedEndDate = AuthCreateEventRequest.formatDateTime(endDateTime);
             AuthCreateEventRequest eventRequest=new AuthCreateEventRequest(name, formattedStartDate, formattedEndDate, description, location, maxParticipants, imageUrl);
-            Call<Void> call= authService.createEvent(groupId, eventRequest);
+
+            Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+            AuthService authServiceForSubmit=retrofit.create(AuthService.class);
+            Call<Void> call= authServiceForSubmit.createEvent(groupId, eventRequest);
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {

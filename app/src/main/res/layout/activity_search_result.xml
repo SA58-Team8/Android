@@ -158,7 +158,7 @@
                         android:layout_margin="5dp"
                         android:textColor="@color/darkblue"
                         android:buttonTint="@color/checkbox_color"
-                        android:text="less than 10" />
+                        android:text="less than 5" />
 
                     <CheckBox
                         android:id="@+id/option2"
@@ -168,7 +168,7 @@
                         android:layout_margin="5dp"
                         android:textColor="@color/darkblue"
                         android:buttonTint="@color/checkbox_color"
-                        android:text="10-20" />
+                        android:text="5-10" />
 
                     <CheckBox
                         android:id="@+id/option3"
@@ -178,7 +178,7 @@
                         android:layout_margin="5dp"
                         android:textColor="@color/darkblue"
                         android:buttonTint="@color/checkbox_color"
-                        android:text="over 30" />
+                        android:text="over 10" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

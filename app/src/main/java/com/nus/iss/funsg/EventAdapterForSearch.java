@@ -1,8 +1,6 @@
 package com.nus.iss.funsg;
 
 import android.content.Context;
-
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +15,21 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder>{
+public class EventAdapterForSearch extends RecyclerView.Adapter<EventAdapterForSearch.EventViewHolder>{
     private List<AuthEventsResponse> eventList;
     private Context context;
 
-    public EventAdapter(Context context, List<AuthEventsResponse> eventList) {
+    public EventAdapterForSearch(Context context, List<AuthEventsResponse> eventList) {
         this.context = context;
         this.eventList = eventList;
     }
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent,int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_list_upcoming,parent,false);
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item_search,parent,false);
         return new EventViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position){
         AuthEventsResponse event=eventList.get(position);
@@ -46,6 +45,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             context.startActivity(intent);
         });
     }
+
     @Override
     public int getItemCount() {
         return eventList.size();

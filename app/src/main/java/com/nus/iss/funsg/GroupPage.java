@@ -3,6 +3,7 @@ package com.nus.iss.funsg;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -88,7 +89,8 @@ public class GroupPage extends AppCompatActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.grey)));
+                                                joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.green)));
+                                                joinButton.setTextColor(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.white)));
                                                 joinButton.setText("You are the host");
                                                 joinButton.setFocusable(true);
                                                 joinButton.setClickable(false);
@@ -119,12 +121,12 @@ public class GroupPage extends AppCompatActivity {
                     bgThread.start();
                 }
                 else{
-                    /*  TODO */
+                    Log.e("responseFailed", "Error reading error body"+ response.message());
                 }
             }
             @Override
             public void onFailure(Call<List<AuthGroupsResponse>> call, Throwable t) {
-                /*  TODO */
+                Log.e("onFailure", "Error dealing data",t);
             }
         });
     }
@@ -140,7 +142,7 @@ public class GroupPage extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                /*  TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
     }
@@ -157,7 +159,7 @@ public class GroupPage extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                /*  TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
 
@@ -171,13 +173,13 @@ public class GroupPage extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     populateGroupDetails(response.body());
                 } else {
-                /*  TODO */
+                    Log.e("response error", "Error reading error body"+ response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<AuthGroupsResponse> call, Throwable t) {
-                /*  TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
 
@@ -237,6 +239,8 @@ public class GroupPage extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        bgThread.interrupt();
+        if (bgThread != null) {
+            bgThread.interrupt();
+        }
     }
 }

@@ -146,8 +146,10 @@ public class NavPersonFragment extends Fragment {
             @Override
             public void onResponse(Call<AuthUserProfileResponse> call, Response<AuthUserProfileResponse> response) {
                 if (response.isSuccessful() && response.body() != null){
-                    Glide.with(getContext()).load(response.body().getProfileImage()).into(userImage);
-                    UserLoginStatus.saveUserId(getContext(),response.body().getUserId());
+                    if (isAdded() && getContext() != null){
+                        Glide.with(getContext()).load(response.body().getProfileImage()).into(userImage);
+                        UserLoginStatus.saveUserId(getContext(),response.body().getUserId());
+                    }
                 }
                 else {
                     Log.e("UserResponseError", "Failed to load user image: " + response.message());
@@ -305,12 +307,12 @@ public class NavPersonFragment extends Fragment {
                 if (response.isSuccessful()){
                     fetchUserInfo();
                 }
-                else {/* TODO */}
+                else {Log.e("response error", "Error reading error body"+ response.message());}
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                /* TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
     }

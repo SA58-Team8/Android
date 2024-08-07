@@ -102,7 +102,6 @@ public class CreateGroup extends AppCompatActivity {
                     Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    /*  TODO*/
                     createGroup(new AuthCreateGroupRequest(groupId,groupName,groupDescription,imageUrl));
                 }
             }

@@ -14,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:background="@color/white">
         <ImageButton
-            android:id="@+id/back_button_create_event"
+            android:id="@+id/back_button_modify_event"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
@@ -54,6 +54,7 @@
                 android:text="Title"
                 />
             <EditText
+                android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginHorizontal="15dp"
@@ -83,7 +84,7 @@
                     android:layout_marginVertical="10dp"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/calendar"/>
-                <TextView
+                <EditText
                     android:id="@+id/start_date"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
@@ -118,7 +119,7 @@
                     android:layout_marginVertical="10dp"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/calendar"/>
-                <TextView
+                <EditText
                     android:id="@+id/end_date"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
@@ -148,6 +149,7 @@
                     android:textColor="@color/darkgrey"
                     android:text="Attendees"/>
                 <EditText
+                    android:id="@+id/event_participants"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginHorizontal="15dp"
@@ -194,6 +196,7 @@
                 android:text="Description"
                 />
             <EditText
+                android:id="@+id/event_description"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginHorizontal="15dp"
@@ -227,6 +230,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
+                    android:id="@+id/upload_image_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -245,26 +249,47 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Upload Image"
+                        android:text="Change Image"
                         android:textSize="25sp"
                         android:textColor="@color/lightblack"/>
                 </LinearLayout>
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
                 <Button
+                    android:id="@+id/cancel_event_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginRight="20dp"
-
-                    android:backgroundTint="#C4006B80"
-                    android:text="Modify"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="left"
+                    android:backgroundTint="#D0C12025"
+                    android:text="Cancel Event"
                     android:textColor="@color/white"
                     android:textSize="26sp"
                     android:textAllCaps="false"
                     />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <Button
+                        android:id="@+id/submit_modify_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_gravity="right"
+                        android:backgroundTint="#C4006B80"
+                        android:text="Modify"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:textAllCaps="false"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

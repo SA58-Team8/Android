@@ -149,13 +149,13 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
                     bgThread.start();
                 }
                 else{
-                    /*  TODO */
+                    Log.e("response error", "Error reading error body"+ response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
-                /*  TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
     }
@@ -172,7 +172,7 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                /*  TODO */
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });
     }
