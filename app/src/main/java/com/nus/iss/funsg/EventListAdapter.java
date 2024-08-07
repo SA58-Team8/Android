@@ -35,8 +35,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.eventParticipants.setText(String.valueOf(eventParticipantsNumber)+"/"+String.valueOf(eventMaxParticipants));
         holder.eventViewMoreDetails.setPaintFlags(holder.eventViewMoreDetails.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         if(event.getCreatedBy().getUserId()==UserLoginStatus.getUserId(context)){
-            holder.eventViewMoreDetails.setText("Event DashBoard");
-            holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
+            holder.eventDashboard.setVisibility(View.VISIBLE);
+            holder.eventDashboard.setPaintFlags(holder.eventDashboard.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            holder.eventDashboard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, EventDashboard.class);
@@ -45,16 +46,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
                 }
             });
         }
-        else{
-            holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, EventPage.class);
-                    intent.putExtra("eventId",event.getId());
-                    context.startActivity(intent);
-                }
-            });
-        }
+
+        holder.eventViewMoreDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EventPage.class);
+                intent.putExtra("eventId",event.getId());
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -65,12 +66,14 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     public static class EventViewHolder extends RecyclerView.ViewHolder{
         TextView eventName, eventTime,eventParticipants;
         TextView eventViewMoreDetails;
+        TextView eventDashboard;
         public EventViewHolder(@NonNull View itemView){
             super(itemView);
             eventName=itemView.findViewById(R.id.event_name);
             eventTime=itemView.findViewById(R.id.event_start_date);
             eventParticipants=itemView.findViewById(R.id.event_participants);
             eventViewMoreDetails=itemView.findViewById(R.id.view_more_details);
+            eventDashboard=itemView.findViewById(R.id.event_dashboard);
         }
     }
     public void updateEvents(List<AuthEventsResponse> newEventsList){

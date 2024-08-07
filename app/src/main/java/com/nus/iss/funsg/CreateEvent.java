@@ -305,11 +305,11 @@ public class CreateEvent extends AppCompatActivity {
             Toast.makeText(this, "File cannot be read", Toast.LENGTH_SHORT).show();
         }
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
         Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
         authService=retrofit.create(AuthService.class);
-        Call<ResponseBody> call= authService.uploadImage(body);
+        Call<ResponseBody> call= authService.uploadEventImage(groupId,body);
         call.enqueue(new Callback<ResponseBody>(){
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response){

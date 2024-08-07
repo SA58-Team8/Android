@@ -1,14 +1,18 @@
 package com.nus.iss.funsg;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,6 +37,8 @@ public class GroupPage extends AppCompatActivity {
     private RecyclerView eventRecyclerView;
     private RecyclerView membersRecyclerView;
     private Button joinButton;
+    private Thread bgThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +49,118 @@ public class GroupPage extends AppCompatActivity {
         eventRecyclerView = findViewById(R.id.event_container);
         membersRecyclerView = findViewById(R.id.members_container);
         joinButton = findViewById(R.id.join_btn);
+
         long groupId = getIntent().getLongExtra("groupId", -1);
+
+        checkIfJoined(groupId);
+        setNormalJoin(groupId);
         if (groupId != -1) {
             fetchGroupDetails(groupId);
         }
+
+    }
+    private void setNormalJoin(long groupId){
+        joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.paleblue)));
+        joinButton.setText("Join Group");
+        joinButton.setFocusable(false);
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                joinGroup(groupId);
+            }
+        });
+    }
+    private void checkIfJoined(long groupId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.getGroupsJoined().enqueue(new Callback<List<AuthGroupsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthGroupsResponse>> call, Response<List<AuthGroupsResponse>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    List<AuthGroupsResponse> joinedGroup=response.body();
+                    bgThread=new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //check the host
+                            for(int i= 0; i<joinedGroup.size();i++){
+                                if(groupId==joinedGroup.get(i).getId()){
+                                    if (UserLoginStatus.getUserId(GroupPage.this)==joinedGroup.get(i).getHost().getUserId()){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.grey)));
+                                                joinButton.setText("You are the host");
+                                                joinButton.setFocusable(true);
+                                                joinButton.setClickable(false);
+                                            }
+                                        });
+                                        break;
+                                    }
+                                    else{
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.grey)));
+                                                joinButton.setText("Quit Group");
+                                                joinButton.setFocusable(true);
+                                                joinButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        quitGroup(groupId);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    bgThread.start();
+                }
+                else{
+                    /*  TODO */
+                }
+            }
+            @Override
+            public void onFailure(Call<List<AuthGroupsResponse>> call, Throwable t) {
+                /*  TODO */
+            }
+        });
+    }
+    private void joinGroup(long groupId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.joinGroup(groupId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(GroupPage.this, "Join successfully!", Toast.LENGTH_SHORT).show();
+                checkIfJoined(groupId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                /*  TODO */
+            }
+        });
+    }
+    private void quitGroup(long groupId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.quitGroup(groupId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                checkIfJoined(groupId);
+                Toast.makeText(GroupPage.this, "You have quit this group", Toast.LENGTH_SHORT).show();
+                setNormalJoin(groupId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                /*  TODO */
+            }
+        });
+
     }
     private void fetchGroupDetails(long groupId){
         Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
@@ -119,5 +233,10 @@ public class GroupPage extends AppCompatActivity {
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         GroupAdapterPageEvent groupAdapterPageEvent=new GroupAdapterPageEvent(this,events);
         eventRecyclerView.setAdapter(groupAdapterPageEvent);
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        bgThread.interrupt();
     }
 }

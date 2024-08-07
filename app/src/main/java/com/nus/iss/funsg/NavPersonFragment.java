@@ -1,13 +1,23 @@
 package com.nus.iss.funsg;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +30,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,6 +129,13 @@ public class NavPersonFragment extends Fragment {
             }
         });
 
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUpdateImageDialog();
+            }
+        });
+
         fetchUserInfo();
 
     }
@@ -170,6 +195,122 @@ public class NavPersonFragment extends Fragment {
             @Override
             public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
                 Log.e("ResponseEventFailure", "Failed to load Event: " + t.getMessage(), t);
+            }
+        });
+    }
+
+    private void showUpdateImageDialog(){
+        new AlertDialog.Builder(getContext())
+                .setTitle("Update Profile Picture")
+                .setMessage("Do you want to update your profile picture?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        requestStoragePermission();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int STORAGE_PERMISSION_CODE = 2;
+    private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
+    private Uri imageUri;
+    private String imageUrl;
+    private void requestStoragePermission(){
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            openFileChooser();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openFileChooser();
+            } else {
+                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            String fileName = getFileName(imageUri);
+            try {
+                InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
+                long fileSize = inputStream.available();
+                if (fileSize <= MAX_FILE_SIZE) {
+                    File file = new File(getContext().getCacheDir(), fileName);
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) > 0) {
+                        outputStream.write(buffer, 0, length);
+                    }
+                    inputStream.close();
+                    outputStream.close();
+                    uploadImageToServer(file);
+                } else {
+                    Toast.makeText(getContext(), "File size limited 20MB", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                Toast.makeText(getContext(), "Error reading file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("FileReadError", "Error reading file", e);
+            }
+        }
+    }
+    private String getFileName(Uri uri){
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+    private void uploadImageToServer(File file){
+        if (!file.exists()) {
+            Toast.makeText(getContext(), "File not exists", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!file.canRead()){
+            Toast.makeText(getContext(), "File cannot be read", Toast.LENGTH_SHORT).show();
+        }
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authService=retrofit.create(AuthService.class);
+        Call<Void> call= authService.uploadUserImage(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    fetchUserInfo();
+                }
+                else {/* TODO */}
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                /* TODO */
             }
         });
     }

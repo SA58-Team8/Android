@@ -2,6 +2,7 @@ package com.nus.iss.funsg;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -19,6 +20,8 @@ import android.Manifest;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +64,8 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
     private TextView goingNumber;
 
     private ImageView hostImage;
+    private Button joinBtn;
+    private Thread bgThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +81,15 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         eventImage = findViewById(R.id.event_image);
         hostImage = findViewById(R.id.host_image);
         goingNumber=findViewById(R.id.going);
+        joinBtn=findViewById(R.id.join_event_btn);
 
-        fetchEventDetails(eventId);
+        checkIfJoined(eventId);
+        setNormalJoin(eventId);
+
+        if(eventId!=-1L){
+            fetchEventDetails(eventId);
+        }
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -88,6 +100,81 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         }
         executorService = Executors.newSingleThreadExecutor();
         handler = new Handler(Looper.getMainLooper());
+    }
+    private void setNormalJoin(long eventId){
+        joinBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventPage.this, R.color.darkblue)));
+        joinBtn.setText("Join and RSVP");
+        joinBtn.setFocusable(false);
+        joinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                joinEvent(eventId);
+            }
+        });
+    }
+
+    private void checkIfJoined(long eventId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.getEventsJoined().enqueue(new Callback<List<AuthEventsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    List<AuthEventsResponse> joinedEvent=response.body();
+                    bgThread=new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i= 0; i<joinedEvent.size();i++){
+                                if(eventId==joinedEvent.get(i).getId()){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            joinBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventPage.this, R.color.grey)));
+                                            joinBtn.setText("Joined");
+                                            joinBtn.setFocusable(true);
+                                            joinBtn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    /*  TODO add a dialog */
+                                                    //quitEvent(eventId);
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    });
+                    bgThread.start();
+                }
+                else{
+                    /*  TODO */
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                /*  TODO */
+            }
+        });
+    }
+    private void joinEvent(long eventId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.joinEvent(eventId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(EventPage.this, "Join successfully!", Toast.LENGTH_SHORT).show();
+                checkIfJoined(eventId);
+                fetchEventDetails(eventId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                /*  TODO */
+            }
+        });
     }
 
     private void fetchEventDetails(long eventId){

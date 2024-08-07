@@ -245,7 +245,7 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(CreateGroup.this, "Group created successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateGroup.this, "Your application has been referred to the administrator for review, please wait.", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     Toast.makeText(CreateGroup.this, "Group creation failed", Toast.LENGTH_SHORT).show();
