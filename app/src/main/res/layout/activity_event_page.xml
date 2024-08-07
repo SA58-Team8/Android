@@ -175,7 +175,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/going"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="0.93"
+                    app:layout_constraintHorizontal_bias="0.95"
                     />
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/person_4"
@@ -184,7 +184,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/going"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="0.86"
+                    app:layout_constraintHorizontal_bias="0.85"
                     />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -194,7 +194,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/going"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="0.79"
+                    app:layout_constraintHorizontal_bias="0.75"
                     />
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/person_2"
@@ -203,7 +203,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/going"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="0.72"
+                    app:layout_constraintHorizontal_bias="0.65"
                     />
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/person_1"
@@ -212,7 +212,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/going"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="0.65"
+                    app:layout_constraintHorizontal_bias="0.55"
                     />
                 <TextView
                     android:id="@+id/going_note"

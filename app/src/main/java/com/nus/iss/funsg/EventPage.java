@@ -1,5 +1,6 @@
 package com.nus.iss.funsg;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -135,13 +137,12 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
                                             joinBtn.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
-                                                    /*  TODO add a dialog */
-                                                    //quitEvent(eventId);
+                                                    showExitEventDialog(eventId);
                                                 }
                                             });
                                         }
                                     });
-
+                                    break;
                                 }
                             }
                         }
@@ -155,6 +156,35 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
 
             @Override
             public void onFailure(Call<List<AuthEventsResponse>> call, Throwable t) {
+                Log.e("OnFailure", "error: " + t.getMessage(), t);
+            }
+        });
+    }
+    private void showExitEventDialog(long eventId){
+        new AlertDialog.Builder(this)
+                .setTitle("Quit Event")
+                .setMessage("Do you want to quit this event?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        quitEvent(eventId);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+    private void quitEvent(long eventId){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.quitEvent(eventId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(EventPage.this, "You have exit this event", Toast.LENGTH_SHORT).show();
+                setNormalJoin(eventId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("OnFailure", "error: " + t.getMessage(), t);
             }
         });

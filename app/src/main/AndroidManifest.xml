@@ -20,6 +20,9 @@
         android:theme="@style/Theme.FunSG"
         tools:targetApi="31">
         <activity
+            android:name=".HostEvents"
+            android:exported="false" />
+        <activity
             android:name=".GroupHostSelectPage"
             android:exported="false" />
         <activity

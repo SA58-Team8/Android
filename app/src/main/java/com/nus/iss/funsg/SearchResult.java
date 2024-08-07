@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -65,8 +67,11 @@ public class SearchResult extends AppCompatActivity {
     private EditText searchEdit;
     private FrameLayout searchBtn;
     private List<AuthEventsResponse> eventsList = new ArrayList<>();
-    private List<AuthEventsResponse> filterEventList;
+    private List<AuthEventsResponse> filterTimeEventList;
     private List<AuthEventsResponse> originEventList;
+    private List<AuthEventsResponse> filterDistanceEventList;
+
+    private List<AuthEventsResponse> filterParticipantsList= new ArrayList<>();
 
     private CheckBox checkbox1;
     private CheckBox checkbox2;
@@ -77,16 +82,21 @@ public class SearchResult extends AppCompatActivity {
     //for get current location
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationClient;
+    private Location userLocation;
 
     private boolean isDistanceBtnSelected = false;
     private boolean isTimeBtnSelected=false;
 
+    private FrameLayout loadingContainer;
+    private int filterDistanceCount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         Intent intent = getIntent();
         query = intent.getStringExtra("query");
+
+        loadingContainer = findViewById(R.id.loading_container);
 
 
         filterBtn=findViewById(R.id.filter_button);
@@ -128,9 +138,9 @@ public class SearchResult extends AppCompatActivity {
         checkbox1.setChecked(true);
         checkbox2.setChecked(true);
         checkbox3.setChecked(true);
-        checkbox1.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants());
-        checkbox2.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants());
-        checkbox3.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants());
+        checkbox1.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants(originEventList));
+        checkbox2.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants(originEventList));
+        checkbox3.setOnCheckedChangeListener((buttonView, isChecked) -> filterEventsByParticipants(originEventList));
         timeConditionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,8 +150,21 @@ public class SearchResult extends AppCompatActivity {
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            getLastLocation();
+        }
 
-        distanceConditionBtn.setOnClickListener(v -> filterDistance());
+        distanceConditionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isDistanceBtnSelected = !isDistanceBtnSelected;
+                filterDistance();
+            }
+        });
         fetchEvents();
 
     }
@@ -154,16 +177,15 @@ public class SearchResult extends AppCompatActivity {
         if(isTimeBtnSelected){
             timeConditionBtn.setBackgroundResource(R.drawable.button_pressed);
             timeConditionBtn.setTextColor(getColor(R.color.white));
-            sortEventsByDate(filterEventList);
+            sortEventsByDate(filterTimeEventList);
         }
         else{
             timeConditionBtn.setBackgroundResource(R.drawable.category_button);
             timeConditionBtn.setTextColor(getColor(R.color.darkblue));
-            eventAdapter.updateEvents(new ArrayList<>(originEventList));
+            filterEventsByParticipants(originEventList);
         }
     }
     private void filterDistance(){
-        isDistanceBtnSelected = !isDistanceBtnSelected;
         if(isTimeBtnSelected){
             isTimeBtnSelected=false;
             timeConditionBtn.setBackgroundResource(R.drawable.category_button);
@@ -172,10 +194,32 @@ public class SearchResult extends AppCompatActivity {
         if (isDistanceBtnSelected) {
             distanceConditionBtn.setBackgroundResource(R.drawable.button_pressed);
             distanceConditionBtn.setTextColor(getResources().getColor(R.color.white));
+            if(filterDistanceCount==1){
+                filterEventsByParticipants(filterDistanceEventList);
+            }
+            else{
+                Toast.makeText(SearchResult.this,"please wait to compute distance",Toast.LENGTH_LONG).show();
+                loadingContainer.setVisibility(View.VISIBLE);
+                executorService.submit(()->{
+                    List<AuthEventsResponse> sortedEvents = sortEventsByDistance(filterDistanceEventList);
+                    runOnUiThread(()->{
+                        if (sortedEvents != null) {
+                            filterDistanceEventList.clear();
+                            filterDistanceEventList.addAll(sortedEvents);
+                            filterEventsByParticipants(filterDistanceEventList);
+                        } else {
+                            Toast.makeText(SearchResult.this, "Sorting error", Toast.LENGTH_SHORT).show();
+                        }
+                        filterDistanceCount=1;
+                        loadingContainer.setVisibility(View.GONE);
+                    });
+                });
+            }
         }
         else{
             distanceConditionBtn.setBackgroundResource(R.drawable.category_button);
             distanceConditionBtn.setTextColor(getResources().getColor(R.color.darkblue));
+            filterEventsByParticipants(originEventList);
         }
     }
     private void toggleFilterOptions() {
@@ -193,8 +237,9 @@ public class SearchResult extends AppCompatActivity {
             public void onResponse(Call<List<AuthEventsResponse>> call, Response<List<AuthEventsResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     eventsList.addAll(response.body());
-                    filterEventList=new ArrayList<>(eventsList);
+                    filterTimeEventList=new ArrayList<>(eventsList);
                     originEventList=new ArrayList<>(eventsList);
+                    filterDistanceEventList=new ArrayList<>(eventsList);
                     eventAdapter.updateEvents(new ArrayList<>(eventsList));
                 } else if (response.isSuccessful() && response.body() == null) {
                     Toast.makeText(SearchResult.this, "No Result, Please check your words", Toast.LENGTH_SHORT).show();
@@ -213,9 +258,9 @@ public class SearchResult extends AppCompatActivity {
         });
     }
 
-    private void sortEventsByDate(List<AuthEventsResponse> filterEventList){
-        Collections.sort(filterEventList, dateComparator);
-        eventAdapter.updateEvents(new ArrayList<>(filterEventList));
+    private void sortEventsByDate(List<AuthEventsResponse> filterTimeEventList){
+        Collections.sort(filterTimeEventList, dateComparator);
+        filterEventsByParticipants(filterTimeEventList);
     }
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -239,29 +284,93 @@ public class SearchResult extends AppCompatActivity {
         }
     }
 
-    private void filterEventsByParticipants(){
-
-        originEventList.clear();
-        filterEventList.clear();
-        for (AuthEventsResponse event : eventsList){
+    private void filterEventsByParticipants(List<AuthEventsResponse> events){
+        filterParticipantsList.clear();
+        for (AuthEventsResponse event : events){
             int participants = event.getEventParticipants().size();
             boolean matchesCheckbox1 = checkbox1.isChecked() && participants < 5;
             boolean matchesCheckbox2 = checkbox2.isChecked() && participants >= 5 && participants <= 10;
             boolean matchesCheckbox3 = checkbox3.isChecked() && participants > 10;
             if (matchesCheckbox1 || matchesCheckbox2 || matchesCheckbox3) {
-                originEventList.add(event);
-                filterEventList.add(event);
+                filterParticipantsList.add(event);
             }
         }
-        if (isTimeBtnSelected){
-            filterTime();
+        eventAdapter.updateEvents(filterParticipantsList);
+
+    }
+
+    private void getLastLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Location permission is required to get the current location.", Toast.LENGTH_SHORT).show();
+            return;
         }
-        else if(isDistanceBtnSelected){
-            filterDistance();
+        try {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    userLocation = location;
+                } else {
+                    Toast.makeText(this, "Unable to get current location one", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Security exception while accessing location", Toast.LENGTH_SHORT).show();
         }
-        else{
-            eventAdapter.updateEvents(originEventList);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                getLastLocation();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Location permission is required to sort events by distance", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private List<AuthEventsResponse> sortEventsByDistance(List<AuthEventsResponse> events) {
+        if (userLocation == null) {
+            Toast.makeText(this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        List<Pair<AuthEventsResponse, Float>> eventDistances = new ArrayList<>();
+        for (AuthEventsResponse event : events) {
+            LatLng eventLatLng = getLatLngFromAddress(event.getLocation());
+            if (eventLatLng != null) {
+                float[] results = new float[1];
+                Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
+                        eventLatLng.latitude, eventLatLng.longitude, results);
+                eventDistances.add(new Pair<>(event, results[0]));
+            }
+        }
+
+        Collections.sort(eventDistances, (e1, e2) -> Float.compare(e1.second, e2.second));
+
+        List<AuthEventsResponse> sortedEvents = new ArrayList<>();
+        for (Pair<AuthEventsResponse, Float> pair : eventDistances) {
+            sortedEvents.add(pair.first);
+        }
+        return sortedEvents;
+    }
+    private LatLng getLatLngFromAddress(String address) {
+        Geocoder geocoder = new Geocoder(this);
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(address, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address location = addresses.get(0);
+                return new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

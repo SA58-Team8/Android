@@ -132,6 +132,12 @@ public interface AuthService {
     @POST("events/{eventId}/register")
     Call<Void> joinEvent(@Path("eventId") long eventId);
 
+    @Headers({
+            "User-Agent: Android"
+    })
+    @DELETE("events/{eventId}/exit")
+    Call<Void> quitEvent(@Path("eventId") long eventId);
+
 
 
     @Multipart
@@ -154,4 +160,11 @@ public interface AuthService {
     })
     @DELETE("events/{eventId}")
     Call<Void> deleteEvent(@Path("eventId") long eventId);
+
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events/{userId}/hostEvents")
+    Call<List<AuthEventsResponse>> getHostEvents(@Path("userId") long userId);
 }

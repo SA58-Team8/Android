@@ -149,12 +149,17 @@ public class ModifyEvent extends AppCompatActivity {
         submitBtn.setOnClickListener(v-> submitEvent());
         cancelBtn.setOnClickListener(v-> showCancelEventDialog());
     }
-    private void submitEvent(){/*  TODO wait for new a controller */
+    private void submitEvent(){/*  TODO wait for new a controller, first to set hint so user can know,if user do not enter anything, use hint*/
+
         String name = eventNameEditText.getText().toString().trim();
         String startDate = startDateEditText.getText().toString().trim();
         String endDate = endDateEditText.getText().toString().trim();
         String description = eventDescriptionEditText.getText().toString().trim();
         String location = editTextLocation.getText().toString().trim();
+        int maxParticipants = Integer.parseInt(eventParticipantsEditText.getText().toString().trim());
+        if(imageUrl==null){
+
+        }
     }
 
     private void cancelEvent(){

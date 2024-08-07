@@ -52,6 +52,7 @@ public class NavPersonFragment extends Fragment {
     private Button logOutBtn;
     private Button createGroupBtn;
     private Button createEventBtn;
+    private Button manageEventBtn;
     private TextView usernameText;
     private TextView emailText;
     private String username;
@@ -105,6 +106,14 @@ public class NavPersonFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getContext(),GroupHostSelectPage.class);
+                startActivity(intent);
+            }
+        });
+        manageEventBtn=view.findViewById(R.id.manage_events);
+        manageEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),HostEvents.class);
                 startActivity(intent);
             }
         });

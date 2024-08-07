@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_light_blue"
-    tools:context=".EventList">
+    tools:context=".HostEvents">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="@color/white">
         <ImageButton
-            android:id="@+id/back_button_event_list"
+            android:id="@+id/back_button_event_manage"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Events"
+            android:text="Events Host"
             android:textSize="36sp"
             android:textStyle="bold"
             android:textColor="@color/darkgrey"/>
@@ -44,4 +44,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </ScrollView>
+
 </LinearLayout>
