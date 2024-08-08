@@ -260,6 +260,7 @@ public class CreateEvent extends AppCompatActivity {
     }
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //noinspection deprecation
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
     @Override

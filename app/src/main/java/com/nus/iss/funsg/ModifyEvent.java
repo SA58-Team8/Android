@@ -174,7 +174,7 @@ public class ModifyEvent extends AppCompatActivity {
         submitBtn.setOnClickListener(v-> submitEvent());
         cancelBtn.setOnClickListener(v-> showCancelEventDialog());
     }
-    private void submitEvent(){/*  TODO wait for new a controller, first to set hint so user can know,if user do not enter anything, use hint*/
+    private void submitEvent(){
         String name,startDate,endDate,description,location;
         int maxParticipants;
         if(!eventNameEditText.getText().toString().isEmpty()){
@@ -330,6 +330,7 @@ public class ModifyEvent extends AppCompatActivity {
     }
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //noinspection deprecation
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
     @Override

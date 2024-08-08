@@ -135,6 +135,7 @@ public class CreateGroup extends AppCompatActivity {
     }
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //noinspection deprecation
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
     @Override
@@ -175,7 +176,7 @@ public class CreateGroup extends AppCompatActivity {
             Toast.makeText(this, "File cannot be read", Toast.LENGTH_SHORT).show();
         }
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
 

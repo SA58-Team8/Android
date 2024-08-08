@@ -111,7 +111,13 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joinEvent(eventId);
+                if(UserLoginStatus.isPreview(EventPage.this)){
+                    Toast.makeText(EventPage.this,"You need to login first.",Toast.LENGTH_SHORT);
+                    Intent intent=new Intent(EventPage.this,FirstLaunch.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else joinEvent(eventId);
             }
         });
     }

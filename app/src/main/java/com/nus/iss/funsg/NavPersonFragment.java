@@ -235,6 +235,7 @@ public class NavPersonFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
     }
+    /** @noinspection deprecation*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -248,8 +249,10 @@ public class NavPersonFragment extends Fragment {
     }
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //noinspection deprecation
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+    /** @noinspection deprecation*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);

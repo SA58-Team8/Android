@@ -1,5 +1,6 @@
 package com.nus.iss.funsg;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -67,7 +68,13 @@ public class GroupPage extends AppCompatActivity {
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joinGroup(groupId);
+                if(UserLoginStatus.isPreview(GroupPage.this)){
+                    Toast.makeText(GroupPage.this,"You need to login first.",Toast.LENGTH_SHORT);
+                    Intent intent=new Intent(GroupPage.this,FirstLaunch.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else joinGroup(groupId);
             }
         });
     }
