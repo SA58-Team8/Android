@@ -156,6 +156,7 @@
         android:background="#609BC9DD"
         >
         <EditText
+            android:id="@+id/group_comment_enter"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="30dp"

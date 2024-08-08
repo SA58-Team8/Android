@@ -188,6 +188,7 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(EventPage.this, "You have exit this event", Toast.LENGTH_SHORT).show();
                 setNormalJoin(eventId);
+                fetchEventDetails(eventId);
             }
 
             @Override
@@ -269,6 +270,10 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         personList.add(person3);
         personList.add(person4);
         personList.add(person5);
+        //clean the image
+        for (ImageView person : personList) {
+            person.setImageDrawable(null);
+        }
         for(int i =0;i<event.getEventParticipants().size();i++){
             Glide.with(this).load(event.getEventParticipants().get(i).getProfileImage()).into(personList.get(i));
         }
@@ -304,6 +309,8 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        /*  TODO set google map cant move alter method : create custom scrollview */
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private void executeGeocodeTask(String locationName, int retryCount){

@@ -1,12 +1,16 @@
 package com.nus.iss.funsg;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +45,10 @@ public class GroupPage extends AppCompatActivity {
     private Button joinButton;
     private Thread bgThread;
 
+    private EditText commentEdit;
+    private FrameLayout sentCommentBtn;
+    private long groupId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +60,32 @@ public class GroupPage extends AppCompatActivity {
         membersRecyclerView = findViewById(R.id.members_container);
         joinButton = findViewById(R.id.join_btn);
 
-        long groupId = getIntent().getLongExtra("groupId", -1);
+        commentEdit=findViewById(R.id.group_comment_enter);
+        sentCommentBtn=findViewById(R.id.send_button_container);
+
+        sentCommentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(UserLoginStatus.isPreview(GroupPage.this)){
+                    Toast.makeText(GroupPage.this,"You need to login first to comment.",Toast.LENGTH_SHORT);
+                }
+                else{
+                    String comment=commentEdit.getText().toString().trim();
+                    if (!comment.isEmpty()) {
+                        postComment(comment);
+                        /* TODO: refresh the comment */
+                    }
+                    commentEdit.setText("");
+                    commentEdit.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                }
+            }
+        });
+
+        groupId = getIntent().getLongExtra("groupId", -1);
 
         checkIfJoined(groupId);
         setNormalJoin(groupId);
@@ -145,6 +178,7 @@ public class GroupPage extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(GroupPage.this, "Join successfully!", Toast.LENGTH_SHORT).show();
                 checkIfJoined(groupId);
+                fetchGroupDetails(groupId);
             }
 
             @Override
@@ -162,6 +196,7 @@ public class GroupPage extends AppCompatActivity {
                 checkIfJoined(groupId);
                 Toast.makeText(GroupPage.this, "You have quit this group", Toast.LENGTH_SHORT).show();
                 setNormalJoin(groupId);
+                fetchGroupDetails(groupId);
             }
 
             @Override
@@ -243,6 +278,30 @@ public class GroupPage extends AppCompatActivity {
         GroupAdapterPageEvent groupAdapterPageEvent=new GroupAdapterPageEvent(this,events);
         eventRecyclerView.setAdapter(groupAdapterPageEvent);
     }
+
+    private void postComment(String comment){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        AuthGroupCommentRequest authGroupCommentRequest=new AuthGroupCommentRequest(comment);
+        authService.postComment(groupId,authGroupCommentRequest).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(GroupPage.this, "Successfully", Toast.LENGTH_SHORT).show();
+                    /* TODO refresh this page*/
+                } else {
+                    Toast.makeText(GroupPage.this, "Sending Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(GroupPage.this, "Sending Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("onFailure","sending comment failed",t);
+            }
+        });
+    }
+
     @Override
     protected void onDestroy(){
         super.onDestroy();

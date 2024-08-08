@@ -47,7 +47,8 @@
                     android:layout_height="50dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/search_bar"
-                    android:layout_marginStart="0dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginEnd="10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:background="@drawable/search_button_ripple"
@@ -76,13 +77,15 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginVertical="20dp"
-                    android:layout_width="180dp"
+                    android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:background="@drawable/suggested_rectangle"
                     android:orientation="horizontal"
                     android:gravity="center"
+                    android:layout_weight="1.2"
                     >
 
                     <TextView
@@ -105,9 +108,12 @@
                 </LinearLayout>
                 <Button
                     android:id="@+id/vibe_check_btn"
-                    android:layout_width="170dp"
+                    android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_marginVertical="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_weight="1.1"
                     android:text="Vibe Check"
                     android:textSize="24sp"
                     android:textAllCaps="false"
@@ -138,30 +144,33 @@
                     android:text="Creative Arts"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
                 <Button
                     android:id="@+id/category_2"
                     android:text="Business Tech"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
                 <Button
                     android:id="@+id/category_3"
                     android:text="Community Causes"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
             </LinearLayout>
             <LinearLayout
@@ -174,30 +183,33 @@
                     android:text="Health Lifestyle"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
                 <Button
                     android:id="@+id/category_5"
-                    android:text="Lifelong  Learning"
+                    android:text="Lifelong Learning"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
                 <Button
                     android:id="@+id/category_6"
-                    android:text="Outdoor   Hobbies"
+                    android:text="Outdoor Hobbies"
                     android:textColor="@color/darkblue"
                     android:textAllCaps="false"
-                    android:layout_width="110dp"
-                    android:layout_height="50dp"
+                    android:layout_width="115dp"
+                    android:layout_height="55dp"
                     android:layout_marginHorizontal="6dp"
                     android:layout_marginVertical="5dp"
+                    android:textSize="18sp"
                     android:background="@drawable/category_ripple"/>
             </LinearLayout>
 

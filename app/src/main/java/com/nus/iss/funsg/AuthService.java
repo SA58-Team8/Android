@@ -176,4 +176,19 @@ public interface AuthService {
     })
     @PUT("events/{eventId}")
     Call<Void> modifyEvent(@Path("eventId") long eventId, @Body AuthCreateEventRequest eventRequest);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @POST("comments/group/{groupId}")
+    Call<Void> postComment(@Path("groupId") long groupId ,@Body AuthGroupCommentRequest commentRequest);
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("comments/group/{groupId}")
+    Call<List<AuthGroupCommentResponse>> getComment(@Path("groupId") long groupId);
+
 }
