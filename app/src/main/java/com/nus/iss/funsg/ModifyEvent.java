@@ -111,7 +111,9 @@ public class ModifyEvent extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Place place = Autocomplete.getPlaceFromIntent(result.getData());
-                        editTextLocation.setText(place.getName());
+                        String placeName = place.getName();
+                        String placeAddress = place.getAddress();
+                        editTextLocation.setText(placeName+", "+placeAddress);
                     } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR) {
                         Status status = Autocomplete.getStatusFromIntent(result.getData());
                         Log.i("MainActivity", status.getStatusMessage());

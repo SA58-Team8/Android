@@ -180,10 +180,9 @@
                 android:layout_height="60dp"
                 android:layout_marginHorizontal="15dp"
                 android:textColor="@color/lightblack"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:imeOptions="actionNext"
                 android:drawableLeft="@drawable/location_point"
                 android:background="@drawable/form_input"/>
 

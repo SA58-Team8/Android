@@ -60,7 +60,7 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
     private ImageView eventImage;
     private TextView eventName;
     private TextView eventDate;
-    private TextView eventLocation;
+    private TextView eventLocation,eventLocationAddress;
     private TextView eventDescription;
     private TextView groupName;
     private TextView goingNumber;
@@ -77,7 +77,8 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
 
         eventName = findViewById(R.id.event_name);
         eventDate = findViewById(R.id.event_date);
-        eventLocation = findViewById(R.id.event_location);
+        eventLocation = findViewById(R.id.event_location_name);
+        eventLocationAddress=findViewById(R.id.event_location_address);
         groupName = findViewById(R.id.group_name);
         eventDescription = findViewById(R.id.event_description);
         eventImage = findViewById(R.id.event_image);
@@ -237,7 +238,11 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
     private void updateUI(AuthEventsResponse event){
         eventName.setText(event.getName());
         eventDate.setText(DateUtils.formatDateString(event.getStart()) + " - " + DateUtils.formatDateString(event.getEnd()));
-        eventLocation.setText(event.getLocation());
+        try{
+            String[] locationInfo = event.getLocation().split(",", 2);
+            eventLocation.setText(locationInfo[0].trim());
+            eventLocationAddress.setText(locationInfo[1].trim());
+        }catch (Exception e){}
         groupName.setText(event.getGroupName());
         eventDescription.setText(event.getDescription());
         goingNumber.setText("Going("+event.getEventParticipants().size()+")");

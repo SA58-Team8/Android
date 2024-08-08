@@ -41,6 +41,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.libraries.places.api.model.AddressComponent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -107,7 +108,10 @@ public class CreateEvent extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Place place = Autocomplete.getPlaceFromIntent(result.getData());
-                        editTextLocation.setText(place.getName());
+                        String placeName = place.getName();
+                        String placeAddress = place.getAddress();
+                        //List<AddressComponent> addressComponents = place.getAddressComponents().asList();
+                        editTextLocation.setText(placeName+", "+placeAddress);
                     } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR) {
                         Status status = Autocomplete.getStatusFromIntent(result.getData());
                         Log.i("MainActivity", status.getStatusMessage());
@@ -118,7 +122,8 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.ADDRESS_COMPONENTS,
+                        Place.Field.LAT_LNG);
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                         .build(CreateEvent.this);
                 autocompleteLauncher.launch(intent);

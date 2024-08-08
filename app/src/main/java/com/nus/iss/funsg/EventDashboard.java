@@ -23,7 +23,7 @@ import retrofit2.Retrofit;
 
 public class EventDashboard extends AppCompatActivity {
     private long eventId;
-    private TextView eventNameText, eventTimeStartText,eventTimeEndText,eventLocationText,eventParticipantsText;
+    private TextView eventNameText, eventTimeStartText,eventTimeEndText,eventLocationText,eventParticipantsText,eventLocationAddressText;
     private Button modifyBtn;
     private int limitParticipants;
     private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription,eventImageUrl;
@@ -38,7 +38,8 @@ public class EventDashboard extends AppCompatActivity {
         eventNameText=findViewById(R.id.event_name);
         eventTimeStartText=findViewById(R.id.event_time_start);
         eventTimeEndText=findViewById(R.id.event_time_end);
-        eventLocationText=findViewById(R.id.event_location);
+        eventLocationText=findViewById(R.id.event_location_name);
+        eventLocationAddressText=findViewById(R.id.event_location_address);
         eventParticipantsText=findViewById(R.id.event_participants);
         modifyBtn=findViewById(R.id.event_modify_btn);
         modifyBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +59,6 @@ public class EventDashboard extends AppCompatActivity {
             }
         });
         fetchEventDetails();
-        /* TODO set attendees image */
 
         recyclerView = findViewById(R.id.attendees_image_recycler);
         int numberOfColumns = 5;
@@ -92,8 +92,14 @@ public class EventDashboard extends AppCompatActivity {
     private void updateUI(AuthEventsResponse event){
         eventNameText.setText(event.getName());
         eventTimeStartText.setText(DateUtils.formatDateString(event.getStart()));
-        eventTimeStartText.setText(DateUtils.formatDateString(event.getEnd()));
-        eventLocationText.setText(event.getLocation());
+        eventTimeEndText.setText(DateUtils.formatDateString(event.getEnd()));
+        try{
+            String[] locationInfo = event.getLocation().split(",", 2);
+            eventLocationText.setText(locationInfo[0].trim());
+            eventLocationAddressText.setText(locationInfo[1].trim());
+        }
+        catch (Exception e){}
+
         eventParticipantsText.setText(event.getEventParticipants().size()+"/"+event.getMaxParticipants());
 
         eventName=event.getName();
