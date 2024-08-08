@@ -19,4 +19,19 @@ public class DateUtils {
         }
         return formattedDate;
     }
+    public static String formatDateStringInHint(String dateString){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date date;
+        String formattedDate = "";
+        try {
+            date = inputFormat.parse(dateString);
+            if (date != null) {
+                formattedDate = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formattedDate;
+    }
 }

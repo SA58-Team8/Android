@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -167,4 +168,12 @@ public interface AuthService {
     })
     @GET("events/{userId}/hostEvents")
     Call<List<AuthEventsResponse>> getHostEvents(@Path("userId") long userId);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @PUT("events/{eventId}")
+    Call<Void> modifyEvent(@Path("eventId") long eventId, @Body AuthCreateEventRequest eventRequest);
 }

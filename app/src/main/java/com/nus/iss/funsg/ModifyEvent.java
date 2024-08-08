@@ -45,6 +45,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -79,6 +82,7 @@ public class ModifyEvent extends AppCompatActivity {
     private long eventId;
     private int existingParticipants;
     private long groupId;
+    private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +90,21 @@ public class ModifyEvent extends AppCompatActivity {
         setContentView(R.layout.activity_modify_event);
         eventId=getIntent().getLongExtra("eventId",0L);
         existingParticipants=getIntent().getIntExtra("existingParticipants",0);
+        eventName=getIntent().getStringExtra("eventName");
+        eventLocation=getIntent().getStringExtra("eventLocation");
+        eventEndDate=getIntent().getStringExtra("eventEndDate");
+        eventStartDate=getIntent().getStringExtra("eventStartDate");
+        eventDescription=getIntent().getStringExtra("eventDescription");
+        imageUrl=getIntent().getStringExtra("eventImageUrl");
+
+
+
         groupId=getIntent().getLongExtra("groupId",-1L);
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), "AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0");
         }
         editTextLocation = findViewById(R.id.edit_text_location);
+        editTextLocation.setHint(eventLocation);
 
         autocompleteLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -115,15 +129,24 @@ public class ModifyEvent extends AppCompatActivity {
             }
         });
         startDateEditText = findViewById(R.id.start_date);
+        startDateEditText.setHint(DateUtils.formatDateStringInHint(eventStartDate));
         endDateEditText = findViewById(R.id.end_date);
+        endDateEditText.setHint(DateUtils.formatDateStringInHint(eventEndDate));
+
         calendar = Calendar.getInstance();
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         startDateEditText.setOnClickListener(v -> showDatePickerDialog(startDateEditText));
         endDateEditText.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
 
         eventNameEditText=findViewById(R.id.event_name);
+        eventNameEditText.setHint(eventName);
+
         eventDescriptionEditText=findViewById(R.id.event_description);
+        eventDescriptionEditText.setHint(eventDescription);
+
         eventParticipantsEditText=findViewById(R.id.event_participants);
+        eventParticipantsEditText.setHint(String.valueOf(existingParticipants));
+
         backBtn=findViewById(R.id.back_button_modify_event);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -150,15 +173,94 @@ public class ModifyEvent extends AppCompatActivity {
         cancelBtn.setOnClickListener(v-> showCancelEventDialog());
     }
     private void submitEvent(){/*  TODO wait for new a controller, first to set hint so user can know,if user do not enter anything, use hint*/
+        String name,startDate,endDate,description,location;
+        int maxParticipants;
+        if(!eventNameEditText.getText().toString().isEmpty()){
+            name = eventNameEditText.getText().toString().trim();
+        }
+        else{
+            name = eventNameEditText.getHint().toString();
+        }
 
-        String name = eventNameEditText.getText().toString().trim();
-        String startDate = startDateEditText.getText().toString().trim();
-        String endDate = endDateEditText.getText().toString().trim();
-        String description = eventDescriptionEditText.getText().toString().trim();
-        String location = editTextLocation.getText().toString().trim();
-        int maxParticipants = Integer.parseInt(eventParticipantsEditText.getText().toString().trim());
-        if(imageUrl==null){
+        if (!startDateEditText.getText().toString().isEmpty()){
+            startDate = startDateEditText.getText().toString().trim();
+        }
+        else {
+            startDate = startDateEditText.getHint().toString();
+        }
 
+        if (!endDateEditText.getText().toString().isEmpty()){
+            endDate = endDateEditText.getText().toString().trim();
+        }
+        else {
+            endDate = endDateEditText.getHint().toString();
+        }
+
+        if(!eventDescriptionEditText.getText().toString().isEmpty()){
+            description = eventDescriptionEditText.getText().toString().trim();
+        }
+        else description = eventDescriptionEditText.getHint().toString();
+
+        if(!editTextLocation.getText().toString().isEmpty()){
+            location = editTextLocation.getText().toString().trim();
+        }
+        else location = editTextLocation.getHint().toString();
+
+        if(!eventParticipantsEditText.getText().toString().isEmpty()){
+            maxParticipants = Integer.parseInt(eventParticipantsEditText.getText().toString().trim());
+        }
+        else maxParticipants=Integer.parseInt(eventParticipantsEditText.getHint().toString());
+
+        //add condition
+        if(maxParticipants<existingParticipants){
+            Toast.makeText(ModifyEvent.this, "attendees can't small than the number of  existing members", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        try{
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate startDateLocal = LocalDate.parse(startDate, inputFormatter);
+            LocalDate endDateLocal = LocalDate.parse(endDate, inputFormatter);
+
+            if(startDateLocal.isAfter(endDateLocal)){
+                Toast.makeText(ModifyEvent.this, "error with date input, please check", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            LocalDateTime startDateTime = startDateLocal.atStartOfDay();
+            LocalDateTime endDateTime = endDateLocal.atStartOfDay();
+            String formattedStartDate = AuthCreateEventRequest.formatDateTime(startDateTime);
+            String formattedEndDate = AuthCreateEventRequest.formatDateTime(endDateTime);
+            AuthCreateEventRequest eventRequest=new AuthCreateEventRequest(name, formattedStartDate, formattedEndDate, description, location, maxParticipants, imageUrl);
+            Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+            AuthService authServiceForSubmit=retrofit.create(AuthService.class);
+            authServiceForSubmit.modifyEvent(eventId,eventRequest).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(ModifyEvent.this, "Event Details Change", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }else {
+                        try {
+                            String errorMessage = response.errorBody().string();
+                            Log.e("modifyEventFailed", "Modify failed: HTTP " + response.code() + " - " + errorMessage);
+                        } catch (IOException e) {
+                            Log.e("modifyEventFailed", "Error reading error body", e);
+                        }
+                        Toast.makeText(ModifyEvent.this, "Modify failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e("ModifyEventOnFailure", "Modify error: " + t.getMessage(), t);
+                    Toast.makeText(ModifyEvent.this, "Modify error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Invalid date format. Please use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -169,6 +271,9 @@ public class ModifyEvent extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ModifyEvent.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ModifyEvent.this, HostEvents.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Log.e("cancelEventFailed", "Error reading error body"+ response.message());
                     Toast.makeText(ModifyEvent.this, "Failed to delete event", Toast.LENGTH_SHORT).show();

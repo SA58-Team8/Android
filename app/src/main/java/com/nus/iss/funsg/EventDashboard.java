@@ -24,7 +24,7 @@ public class EventDashboard extends AppCompatActivity {
     private TextView eventNameText, eventTimeStartText,eventTimeEndText,eventLocationText,eventParticipantsText;
     private Button modifyBtn;
     private int limitParticipants;
-
+    private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription,eventImageUrl;
     private long groupId;
 
     @Override
@@ -46,6 +46,12 @@ public class EventDashboard extends AppCompatActivity {
                 intent.putExtra("eventId",eventId);
                 intent.putExtra("existingParticipants",limitParticipants);
                 intent.putExtra("groupId",groupId);
+                intent.putExtra("eventName",eventName);
+                intent.putExtra("eventLocation",eventLocation);
+                intent.putExtra("eventEndDate",eventEndDate);
+                intent.putExtra("eventStartDate",eventStartDate);
+                intent.putExtra("eventDescription",eventDescription);
+                intent.putExtra("eventImageUrl",eventImageUrl);
                 startActivity(intent);
             }
         });
@@ -82,7 +88,14 @@ public class EventDashboard extends AppCompatActivity {
         eventTimeStartText.setText(DateUtils.formatDateString(event.getEnd()));
         eventLocationText.setText(event.getLocation());
         eventParticipantsText.setText(event.getEventParticipants().size()+"/"+event.getMaxParticipants());
+
+        eventName=event.getName();
         limitParticipants=event.getEventParticipants().size();
         groupId=event.getGroupId();
+        eventImageUrl=event.getProfileImagePath();
+        eventStartDate=event.getStart();
+        eventEndDate=event.getEnd();
+        eventLocation=event.getLocation();
+        eventDescription=event.getDescription();
     }
 }

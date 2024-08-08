@@ -172,6 +172,11 @@ public class CreateEvent extends AppCompatActivity {
             LocalDateTime startDateTime = startDateLocal.atStartOfDay();
             LocalDateTime endDateTime = endDateLocal.atStartOfDay();
 
+            if(startDateLocal.isAfter(endDateLocal)){
+                Toast.makeText(CreateEvent.this, "error with date input, please check", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String formattedStartDate = AuthCreateEventRequest.formatDateTime(startDateTime);
             String formattedEndDate = AuthCreateEventRequest.formatDateTime(endDateTime);
             AuthCreateEventRequest eventRequest=new AuthCreateEventRequest(name, formattedStartDate, formattedEndDate, description, location, maxParticipants, imageUrl);

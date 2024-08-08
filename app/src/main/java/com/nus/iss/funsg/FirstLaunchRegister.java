@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,6 +70,12 @@ public class FirstLaunchRegister extends AppCompatActivity {
 
             if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "please fill all field", Toast.LENGTH_SHORT).show();
+            } else if (username.length() > 30) {
+                Toast.makeText(this, "Username must be at most 30 characters", Toast.LENGTH_SHORT).show();
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            } else if (password.length() < 6) {
+                Toast.makeText(this, "Password must be more than 6 characters", Toast.LENGTH_SHORT).show();
             } else {
                 signUp(new AuthSignUpRequest(username, email, password));
             }

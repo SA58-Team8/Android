@@ -111,6 +111,7 @@
                         android:background="@drawable/category_ripple"/>
 
                     <Button
+                        android:visibility="gone"
                         android:id="@+id/condition2_button"
                         android:layout_width="110dp"
                         android:layout_height="50dp"

@@ -287,10 +287,10 @@ public class SearchResult extends AppCompatActivity {
     private void filterEventsByParticipants(List<AuthEventsResponse> events){
         filterParticipantsList.clear();
         for (AuthEventsResponse event : events){
-            int participants = event.getEventParticipants().size();
+            int participants = event.getMaxParticipants();
             boolean matchesCheckbox1 = checkbox1.isChecked() && participants < 5;
-            boolean matchesCheckbox2 = checkbox2.isChecked() && participants >= 5 && participants <= 10;
-            boolean matchesCheckbox3 = checkbox3.isChecked() && participants > 10;
+            boolean matchesCheckbox2 = checkbox2.isChecked() && participants >= 5 && participants <= 15;
+            boolean matchesCheckbox3 = checkbox3.isChecked() && participants > 15;
             if (matchesCheckbox1 || matchesCheckbox2 || matchesCheckbox3) {
                 filterParticipantsList.add(event);
             }
