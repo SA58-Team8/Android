@@ -133,12 +133,16 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/comment_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="22dp">
-            </androidx.recyclerview.widget.RecyclerView>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/comment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="22dp">
+                </androidx.recyclerview.widget.RecyclerView>
+            </ScrollView>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="150dp"/>

@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,11 +28,11 @@ public class EventDashboard extends AppCompatActivity {
     private int limitParticipants;
     private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription,eventImageUrl;
     private long groupId;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_event_dashboard);
         eventId=getIntent().getLongExtra("eventId",0L);
         eventNameText=findViewById(R.id.event_name);
@@ -57,6 +59,11 @@ public class EventDashboard extends AppCompatActivity {
         });
         fetchEventDetails();
         /* TODO set attendees image */
+
+        recyclerView = findViewById(R.id.attendees_image_recycler);
+        int numberOfColumns = 5;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, numberOfColumns);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
     private void fetchEventDetails(){
         Retrofit retrofit=RetrofitClient.getClientNoToken(IPAddress.ipAddress);
@@ -97,5 +104,8 @@ public class EventDashboard extends AppCompatActivity {
         eventEndDate=event.getEnd();
         eventLocation=event.getLocation();
         eventDescription=event.getDescription();
+
+        EventDashboardAdapter eventDashboardAdapter=new EventDashboardAdapter(this,event);
+        recyclerView.setAdapter(eventDashboardAdapter);
     }
 }
