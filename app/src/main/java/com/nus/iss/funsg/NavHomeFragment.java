@@ -77,6 +77,13 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
             suggestedToggle=view.findViewById(R.id.customSwitch);
             vibeCheckBtn=view.findViewById(R.id.vibe_check_btn);
             suggestedText=view.findViewById(R.id.suggested_word);
+            vibeCheckBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent=new Intent(getContext(), WordSelectorActivity.class);
+                    startActivity(intent);
+                }
+            });
 
             //it means that from launch page to click preview.
             if (getArguments() != null) {

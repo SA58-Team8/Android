@@ -1,5 +1,6 @@
 package com.nus.iss.funsg;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -190,5 +191,18 @@ public interface AuthService {
     })
     @GET("comments/group/{groupId}")
     Call<List<AuthGroupCommentResponse>> getComment(@Path("groupId") long groupId);
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("users/MBTITest")
+    Call<Map<String,String>> getMBTISentence();
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @POST("users/prediction")
+    Call<Void> submitMBTIWords(@Body AuthPredictMBTIRequest authPredictMBTIRequest);
 
 }
