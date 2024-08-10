@@ -102,6 +102,7 @@ public class FirstLaunchRegister extends AppCompatActivity {
                             uploadDefaultImage(token);
                             runOnUiThread(() -> {
                                 Intent intent = new Intent(FirstLaunchRegister.this, MainActivity.class);
+                                intent.putExtra("newUser",true);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                                 finish();

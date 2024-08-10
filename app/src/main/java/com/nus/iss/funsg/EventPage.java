@@ -86,8 +86,9 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         goingNumber=findViewById(R.id.going);
         joinBtn=findViewById(R.id.join_event_btn);
 
-        checkIfJoined(eventId);
+
         setNormalJoin(eventId);
+        checkIfJoined(eventId);
 
         if(eventId!=-1L){
             fetchEventDetails(eventId);
@@ -105,21 +106,23 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
         handler = new Handler(Looper.getMainLooper());
     }
     private void setNormalJoin(long eventId){
-        joinBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventPage.this, R.color.darkblue)));
-        joinBtn.setText("Join and RSVP");
-        joinBtn.setFocusable(false);
-        joinBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(UserLoginStatus.isPreview(EventPage.this)){
-                    Toast.makeText(EventPage.this,"You need to login first.",Toast.LENGTH_SHORT);
-                    Intent intent=new Intent(EventPage.this,FirstLaunch.class);
-                    startActivity(intent);
-                    finish();
+        if(UserLoginStatus.isPreview(this)){
+            joinBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventPage.this, R.color.grey)));
+            joinBtn.setText("Preview Mode");
+            joinBtn.setClickable(false);
+        }
+        else {
+            joinBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventPage.this, R.color.darkblue)));
+            joinBtn.setText("Join and RSVP");
+            joinBtn.setFocusable(false);
+            joinBtn.setClickable(true);
+            joinBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    joinEvent(eventId);
                 }
-                else joinEvent(eventId);
-            }
-        });
+            });
+        }
     }
 
     private void checkIfJoined(long eventId){
@@ -275,7 +278,9 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
             person.setImageDrawable(null);
         }
         for(int i =0;i<event.getEventParticipants().size();i++){
-            Glide.with(this).load(event.getEventParticipants().get(i).getProfileImage()).into(personList.get(i));
+            if(i<5){
+                Glide.with(this).load(event.getEventParticipants().get(i).getProfileImage()).into(personList.get(i));
+            }
         }
         TextView goingNote=findViewById(R.id.going_note);
         if(event.getEventParticipants().size()>=5){

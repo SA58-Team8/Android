@@ -42,6 +42,7 @@ public class GroupPage extends AppCompatActivity {
     private TextView groupDescriptionTextView;
     private RecyclerView eventRecyclerView;
     private RecyclerView membersRecyclerView;
+    private RecyclerView commentRecyclerView;
     private Button joinButton;
     private Thread bgThread;
 
@@ -58,6 +59,7 @@ public class GroupPage extends AppCompatActivity {
         groupDescriptionTextView = findViewById(R.id.group_description);
         eventRecyclerView = findViewById(R.id.event_container);
         membersRecyclerView = findViewById(R.id.members_container);
+        commentRecyclerView = findViewById(R.id.comment_container);
         joinButton = findViewById(R.id.join_btn);
 
         commentEdit=findViewById(R.id.group_comment_enter);
@@ -73,7 +75,6 @@ public class GroupPage extends AppCompatActivity {
                     String comment=commentEdit.getText().toString().trim();
                     if (!comment.isEmpty()) {
                         postComment(comment);
-                        /* TODO: refresh the comment */
                     }
                     commentEdit.setText("");
                     commentEdit.clearFocus();
@@ -86,30 +87,31 @@ public class GroupPage extends AppCompatActivity {
         });
 
         groupId = getIntent().getLongExtra("groupId", -1);
-
-        checkIfJoined(groupId);
         setNormalJoin(groupId);
+        checkIfJoined(groupId);
         if (groupId != -1) {
             fetchGroupDetails(groupId);
         }
 
     }
     private void setNormalJoin(long groupId){
-        joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.paleblue)));
-        joinButton.setText("Join Group");
-        joinButton.setFocusable(false);
-        joinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(UserLoginStatus.isPreview(GroupPage.this)){
-                    Toast.makeText(GroupPage.this,"You need to login first.",Toast.LENGTH_SHORT);
-                    Intent intent=new Intent(GroupPage.this,FirstLaunch.class);
-                    startActivity(intent);
-                    finish();
+        if(UserLoginStatus.isPreview(this)){
+            joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.grey)));
+            joinButton.setText("You are not logged in yet");
+            joinButton.setClickable(false);
+        }
+        else{
+            joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.paleblue)));
+            joinButton.setText("Join Group");
+            joinButton.setFocusable(false);
+            joinButton.setClickable(true);
+            joinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    joinGroup(groupId);
                 }
-                else joinGroup(groupId);
-            }
-        });
+            });
+        }
     }
     private void checkIfJoined(long groupId){
         Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
@@ -270,6 +272,8 @@ public class GroupPage extends AppCompatActivity {
                 return false;
             }
         });
+        fetchComment();
+
     }
 
     private void displayEvents(List<AuthEventsResponse> events){
@@ -288,7 +292,7 @@ public class GroupPage extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(GroupPage.this, "Successfully", Toast.LENGTH_SHORT).show();
-                    /* TODO refresh this page*/
+                    fetchGroupDetails(groupId);
                 } else {
                     Toast.makeText(GroupPage.this, "Sending Error", Toast.LENGTH_SHORT).show();
                 }
@@ -298,6 +302,28 @@ public class GroupPage extends AppCompatActivity {
             public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(GroupPage.this, "Sending Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("onFailure","sending comment failed",t);
+            }
+        });
+    }
+    private void fetchComment(){
+        Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.getComment(groupId).enqueue(new Callback<List<AuthGroupCommentResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthGroupCommentResponse>> call, Response<List<AuthGroupCommentResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<AuthGroupCommentResponse> commentList=response.body();
+                    commentRecyclerView.setLayoutManager(new LinearLayoutManager(GroupPage.this));
+                    GroupAdapterPageComment groupAdapterPageComment=new GroupAdapterPageComment(GroupPage.this,commentList);
+                    commentRecyclerView.setAdapter(groupAdapterPageComment);
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuthGroupCommentResponse>> call, Throwable t) {
+                Toast.makeText(GroupPage.this, "load comments Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("onFailure","load comments Error",t);
             }
         });
     }

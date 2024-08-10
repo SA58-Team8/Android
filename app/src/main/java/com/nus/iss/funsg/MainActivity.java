@@ -35,13 +35,17 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (!UserLoginStatus.isLoggedIn(this) && !UserLoginStatus.isPreview(this)){
             Intent intent = new Intent(this,FirstLaunch.class);
             startActivity(intent);
             finish();
         }
         else if(UserLoginStatus.isLoggedIn(this)){
+            boolean isNewUser=getIntent().getBooleanExtra("newUser",false);
+            if(isNewUser){
+                Intent intent =new Intent(this, WordSelectorActivity.class);
+                startActivity(intent);
+            }
             setContentView(R.layout.activity_main);
             bottomNavigationView = findViewById(R.id.bottom_navigation);
             fragmentManager = getSupportFragmentManager();

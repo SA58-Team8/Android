@@ -105,7 +105,14 @@ public class SearchResult extends AppCompatActivity {
 
         filterOptionsLayout = findViewById(R.id.filter_options_layout);
 
-        filterBtn.setOnClickListener(v->toggleFilterOptions());
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(originEventList!=null){
+                    toggleFilterOptions();
+                }
+            }
+        });
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -144,8 +151,10 @@ public class SearchResult extends AppCompatActivity {
         timeConditionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isTimeBtnSelected=!isTimeBtnSelected;
-                filterTime();
+                if(originEventList!=null){
+                    isTimeBtnSelected=!isTimeBtnSelected;
+                    filterTime();
+                }
             }
         });
 
@@ -155,7 +164,7 @@ public class SearchResult extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         } else {
-            getLastLocation();
+            //getLastLocation();
         }
 
         distanceConditionBtn.setOnClickListener(new View.OnClickListener() {
@@ -326,7 +335,7 @@ public class SearchResult extends AppCompatActivity {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
-                getLastLocation();
+                //getLastLocation();
             } else {
                 // Permission denied
                 Toast.makeText(this, "Location permission is required to sort events by distance", Toast.LENGTH_SHORT).show();
