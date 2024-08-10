@@ -43,12 +43,18 @@ public class GroupPage extends AppCompatActivity {
     private RecyclerView eventRecyclerView;
     private RecyclerView membersRecyclerView;
     private RecyclerView commentRecyclerView;
+    private TextView noEventNote,noCommentNote;
     private Button joinButton;
     private Thread bgThread;
 
     private EditText commentEdit;
     private FrameLayout sentCommentBtn;
     private long groupId;
+
+    private String groupNameForModify;
+    private String groupDescriptionForModify;
+    private String groupCategoryForModify;
+    private String groupImageForModify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class GroupPage extends AppCompatActivity {
         membersRecyclerView = findViewById(R.id.members_container);
         commentRecyclerView = findViewById(R.id.comment_container);
         joinButton = findViewById(R.id.join_btn);
+        noEventNote=findViewById(R.id.no_event_note);
+        noCommentNote=findViewById(R.id.no_comment_note);
 
         commentEdit=findViewById(R.id.group_comment_enter);
         sentCommentBtn=findViewById(R.id.send_button_container);
@@ -88,10 +96,10 @@ public class GroupPage extends AppCompatActivity {
 
         groupId = getIntent().getLongExtra("groupId", -1);
         setNormalJoin(groupId);
-        checkIfJoined(groupId);
         if (groupId != -1) {
             fetchGroupDetails(groupId);
         }
+        checkIfJoined(groupId);
 
     }
     private void setNormalJoin(long groupId){
@@ -133,9 +141,21 @@ public class GroupPage extends AppCompatActivity {
                                             public void run() {
                                                 joinButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.green)));
                                                 joinButton.setTextColor(ColorStateList.valueOf(ContextCompat.getColor(GroupPage.this, R.color.white)));
-                                                joinButton.setText("You are the host");
+                                                joinButton.setText("Modify Group Details");
                                                 joinButton.setFocusable(true);
-                                                joinButton.setClickable(false);
+                                                joinButton.setClickable(true);
+                                                joinButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent=new Intent(GroupPage.this,ModifyGroup.class);
+                                                        intent.putExtra("groupName",groupNameForModify);
+                                                        intent.putExtra("groupId",groupId);
+                                                        intent.putExtra("groupDescription",groupDescriptionForModify);
+                                                        intent.putExtra("groupImage",groupImageForModify);
+                                                        intent.putExtra("groupCategory",groupCategoryForModify);
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                             }
                                         });
                                         break;
@@ -216,6 +236,10 @@ public class GroupPage extends AppCompatActivity {
             public void onResponse(Call<AuthGroupsResponse> call, Response<AuthGroupsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     populateGroupDetails(response.body());
+                    groupNameForModify=response.body().getName();
+                    groupDescriptionForModify=response.body().getDescription();
+                    groupCategoryForModify=response.body().getCategoryName();
+                    groupImageForModify=response.body().getProfileImagePath();
                 } else {
                     Log.e("response error", "Error reading error body"+ response.message());
                 }
@@ -277,10 +301,14 @@ public class GroupPage extends AppCompatActivity {
     }
 
     private void displayEvents(List<AuthEventsResponse> events){
-
-        eventRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        GroupAdapterPageEvent groupAdapterPageEvent=new GroupAdapterPageEvent(this,events);
-        eventRecyclerView.setAdapter(groupAdapterPageEvent);
+        if(events.size()==0){
+            noEventNote.setVisibility(View.VISIBLE);
+        }
+        else{
+            eventRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+            GroupAdapterPageEvent groupAdapterPageEvent=new GroupAdapterPageEvent(this,events);
+            eventRecyclerView.setAdapter(groupAdapterPageEvent);
+        }
     }
 
     private void postComment(String comment){
@@ -313,10 +341,12 @@ public class GroupPage extends AppCompatActivity {
             public void onResponse(Call<List<AuthGroupCommentResponse>> call, Response<List<AuthGroupCommentResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<AuthGroupCommentResponse> commentList=response.body();
+                    noCommentNote.setVisibility(View.GONE);
                     commentRecyclerView.setLayoutManager(new LinearLayoutManager(GroupPage.this));
                     GroupAdapterPageComment groupAdapterPageComment=new GroupAdapterPageComment(GroupPage.this,commentList);
                     commentRecyclerView.setAdapter(groupAdapterPageComment);
                 } else {
+                    noCommentNote.setVisibility(View.VISIBLE);
                 }
             }
 

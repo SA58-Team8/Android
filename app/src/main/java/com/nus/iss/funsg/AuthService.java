@@ -205,4 +205,12 @@ public interface AuthService {
     @POST("users/prediction")
     Call<Void> submitMBTIWords(@Body AuthPredictMBTIRequest authPredictMBTIRequest);
 
+
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: Android"
+    })
+    @PUT("groups/{groupId}")
+    Call<Void> modifyGroup(@Path("groupId") long groupId, @Body AuthCreateGroupRequest groupRequest);
+
 }

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".GroupPage"
     android:background="@color/white">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         >
@@ -58,6 +58,11 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="1dp"
+                android:background="@color/lightblack" />
             <TextView
                 android:id="@+id/group_description"
                 android:layout_width="match_parent"
@@ -71,10 +76,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="22dp"
+                android:layout_marginTop="20dp"
                 android:text="Events"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="1dp"
+                android:background="@color/lightblack" />
+            <TextView
+                android:id="@+id/no_event_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:text="None"
+                android:textSize="22sp"
+                android:textColor="@color/grey"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,15 +111,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="22dp"
+                android:layout_marginTop="20dp"
                 android:text="Our Members"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="1dp"
+                android:background="@color/lightblack" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:orientation="horizontal"
+                android:layout_marginTop="5dp"
                 android:layout_marginHorizontal="22dp">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/members_container"
@@ -128,11 +155,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="22dp"
                 android:text="Comments"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="36sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="1dp"
+                android:background="@color/lightblack" />
+
+            <TextView
+                android:id="@+id/no_comment_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="22dp"
+                android:text="None"
+                android:textSize="22sp"
+                android:textColor="@color/grey"
+                android:visibility="gone"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comment_container"
                 android:layout_width="match_parent"
