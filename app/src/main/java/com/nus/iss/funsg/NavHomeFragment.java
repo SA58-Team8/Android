@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nus.iss.funsg.R;
@@ -48,6 +49,11 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     private Button category5Btn;
     private Button category6Btn;
     private EditText searchText;
+    private LinearLayout groupTextLinear;
+
+    private RecyclerView recyclerViewGroup;
+    private GroupAdapterForHome groupAdapterForHome;
+    private List<AuthGroupsResponse> groupList = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
@@ -60,8 +66,6 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_nav_home, container, false);
         return view;
-
-
     }
 
     @Override
@@ -160,6 +164,9 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
                 }
             });
 
+            fetchGroupsJoined();
+            groupTextLinear=view.findViewById(R.id.group_text_container);
+            recyclerViewGroup=view.findViewById(R.id.group_container);
         }
     }
     @Override
@@ -240,5 +247,29 @@ public class NavHomeFragment extends Fragment implements View.OnClickListener{
                 }
             });
         }
+    }
+    private void fetchGroupsJoined(){
+        Retrofit retrofitEvent=RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authServiceGroup=retrofitEvent.create(AuthService.class);
+        authServiceGroup.getGroupsJoined().enqueue(new Callback<List<AuthGroupsResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuthGroupsResponse>> call, Response<List<AuthGroupsResponse>> response) {
+                if (response.isSuccessful()&& response.body() != null){
+                    groupList=new ArrayList<>(response.body());
+                    if(groupList.size()!=0){
+                        recyclerViewGroup.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+                        groupAdapterForHome=new GroupAdapterForHome(getContext(),groupList);
+                        recyclerViewGroup.setAdapter(groupAdapterForHome);
+                    }
+                }
+                else{
+                    groupTextLinear.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<AuthGroupsResponse>> call, Throwable t) {
+                Log.e("ResponseGroupFailure", "Failed to load Group: " + t.getMessage(), t);
+            }
+        });
     }
 }

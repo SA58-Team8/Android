@@ -213,7 +213,28 @@
                     android:background="@drawable/category_ripple"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/group_text_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/main_text_view_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="What's new in your groups"
+                    android:textColor="@color/lightblack"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="10dp"
+                    />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/group_container"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
+            </LinearLayout>
             <TextView
                 android:id="@+id/main_text_upcoming_event"
                 android:layout_width="wrap_content"

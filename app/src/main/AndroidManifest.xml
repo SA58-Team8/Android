@@ -20,6 +20,9 @@
         android:theme="@style/Theme.FunSG"
         tools:targetApi="31">
         <activity
+            android:name=".GroupMediaPage"
+            android:exported="false" />
+        <activity
             android:name=".ModifyGroup"
             android:exported="false" />
         <activity
