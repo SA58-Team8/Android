@@ -93,7 +93,7 @@ public class CreateGroup extends AppCompatActivity {
             String groupName =groupNameText.getText().toString();
             String groupDescription=groupDescriptionText.getText().toString();
             String category = spinnerCategory.getSelectedItem().toString();
-            Long groupId=getCategoryId(category);
+            Long groupCategoryId=getCategoryId(category);
             if(imageUrl == null){
                 Toast.makeText(this, "Please upload an image first", Toast.LENGTH_SHORT).show();
             }
@@ -102,7 +102,7 @@ public class CreateGroup extends AppCompatActivity {
                     Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    createGroup(new AuthCreateGroupRequest(groupId,groupName,groupDescription,imageUrl));
+                    createGroup(new AuthCreateGroupRequest(groupCategoryId,groupName,groupDescription,imageUrl));
                 }
             }
         });

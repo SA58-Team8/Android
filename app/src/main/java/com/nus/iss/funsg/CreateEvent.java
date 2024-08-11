@@ -177,8 +177,15 @@ public class CreateEvent extends AppCompatActivity {
             LocalDateTime startDateTime = startDateLocal.atStartOfDay();
             LocalDateTime endDateTime = endDateLocal.atStartOfDay();
 
+            LocalDate today = LocalDate.now();
+
+            if (startDateLocal.isBefore(today)) {
+                Toast.makeText(CreateEvent.this, "Start date cannot be earlier than today", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if(startDateLocal.isAfter(endDateLocal)){
-                Toast.makeText(CreateEvent.this, "error with date input, please check", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateEvent.this, "Start date cannot be later than end date", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -188,12 +195,20 @@ public class CreateEvent extends AppCompatActivity {
 
             Retrofit retrofit = RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(this));
             AuthService authServiceForSubmit=retrofit.create(AuthService.class);
-            Call<Void> call= authServiceForSubmit.createEvent(groupId, eventRequest);
-            call.enqueue(new Callback<Void>() {
+            Call<AuthEventsResponse> call= authServiceForSubmit.createEvent(groupId, eventRequest);
+            call.enqueue(new Callback<AuthEventsResponse>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(Call<AuthEventsResponse> call, Response<AuthEventsResponse> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                        long eventId=response.body().getId();
+
+                        Intent closeIntent = new Intent("CLOSE_ACTIVITY");
+                        sendBroadcast(closeIntent);
+
+                        Intent intent=new Intent(CreateEvent.this,EventPage.class);
+                        intent.putExtra("eventId",eventId);
+                        startActivity(intent);
                         finish();
                     }else {
                         try {
@@ -207,7 +222,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(Call<AuthEventsResponse> call, Throwable t) {
                     Log.e("CreateEventOnFailure", "Creation error: " + t.getMessage(), t);
                     Toast.makeText(CreateEvent.this, "Creation error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 

@@ -101,7 +101,7 @@ public interface AuthService {
             "User-Agent: Android"
     })
     @POST("events/{groupId}/events")
-    Call<Void> createEvent(@Path("groupId") long groupId, @Body AuthCreateEventRequest eventRequest);
+    Call<AuthEventsResponse> createEvent(@Path("groupId") long groupId, @Body AuthCreateEventRequest eventRequest);
 
 
     @Headers({
@@ -212,5 +212,12 @@ public interface AuthService {
     })
     @PUT("groups/{groupId}")
     Call<Void> modifyGroup(@Path("groupId") long groupId, @Body AuthCreateGroupRequest groupRequest);
+
+
+    @Headers({
+            "User-Agent: Android"
+    })
+    @GET("events/{groupId}/events/Image")
+    Call<List<String>> getGroupPhoto(@Path("groupId") long groupId);
 
 }

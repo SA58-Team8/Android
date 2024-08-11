@@ -252,6 +252,7 @@ public class ModifyGroup extends AppCompatActivity {
         else {
             description=groupDescriptionText.getText().toString().trim();
         }
+        String groupCategory = spinnerCategory.getSelectedItem().toString();
         long categoryId=CreateGroup.getCategoryId(groupCategory);
         AuthCreateGroupRequest request=new AuthCreateGroupRequest(categoryId,name,description,imageUrl);
         modifyGroup(request);
@@ -264,6 +265,7 @@ public class ModifyGroup extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ModifyGroup.this, "Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(ModifyGroup.this, "Group change failed", Toast.LENGTH_SHORT).show();
                 }

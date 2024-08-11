@@ -225,6 +225,18 @@ public class ModifyEvent extends AppCompatActivity {
             LocalDate startDateLocal = LocalDate.parse(startDate, inputFormatter);
             LocalDate endDateLocal = LocalDate.parse(endDate, inputFormatter);
 
+            LocalDate today = LocalDate.now();
+
+            if (startDateLocal.isBefore(today)) {
+                Toast.makeText(ModifyEvent.this, "Start date cannot be earlier than today", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if(startDateLocal.isAfter(endDateLocal)){
+                Toast.makeText(ModifyEvent.this, "Start date cannot be later than end date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if(startDateLocal.isAfter(endDateLocal)){
                 Toast.makeText(ModifyEvent.this, "error with date input, please check", Toast.LENGTH_SHORT).show();
                 return;

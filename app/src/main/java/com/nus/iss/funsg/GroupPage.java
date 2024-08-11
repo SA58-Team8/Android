@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -72,6 +73,18 @@ public class GroupPage extends AppCompatActivity {
 
         commentEdit=findViewById(R.id.group_comment_enter);
         sentCommentBtn=findViewById(R.id.send_button_container);
+
+        TextView showPhotoText=findViewById(R.id.show_photo_text);
+        showPhotoText.setPaintFlags(showPhotoText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        showPhotoText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GroupPage.this,GroupMediaPage.class);
+                intent.putExtra("groupId",groupId);
+                intent.putExtra("groupName",groupNameForModify);
+                startActivity(intent);
+            }
+        });
 
         sentCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

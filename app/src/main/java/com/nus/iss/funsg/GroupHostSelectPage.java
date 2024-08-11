@@ -1,5 +1,9 @@
 package com.nus.iss.funsg;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +35,10 @@ public class GroupHostSelectPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_host_select_page);
+
+        IntentFilter filter = new IntentFilter("CLOSE_ACTIVITY");
+        registerReceiver(closeReceiver, filter);
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         groupAdapter = new GroupAdapterForSelect(this, groupList);
@@ -76,5 +84,18 @@ public class GroupHostSelectPage extends AppCompatActivity {
                 Toast.makeText(GroupHostSelectPage.this, "Error fetching", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private BroadcastReceiver closeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unregisterReceiver(closeReceiver);
     }
 }
