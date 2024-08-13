@@ -32,6 +32,13 @@ public interface AuthService {
     Call<AuthLoginResponse> login(@Body AuthLoginRequest authRequest);
 
     @Headers({
+            "User-Agent: Android"
+    })
+    @POST("auth/logout")
+    Call<Void> logout();
+
+
+    @Headers({
             "Content-Type: application/json",
             "User-Agent: Android"
     })

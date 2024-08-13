@@ -87,6 +87,7 @@ public class NavPersonFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 UserLoginStatus.clearUserInfo(getContext());
+                logout();
                 Intent intent = new Intent(getActivity(), FirstLaunch.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -325,6 +326,24 @@ public class NavPersonFragment extends Fragment {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("OnFailure", "error: " + t.getMessage(), t);
+            }
+        });
+    }
+    private void logout(){
+        Retrofit retrofit= RetrofitClient.getClient(IPAddress.ipAddress,UserLoginStatus.getToken(getContext()));
+        AuthService authService=retrofit.create(AuthService.class);
+        authService.logout().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("logout","successful");
+                }
+                else Log.d("logout","server response error");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("logoutOnFailure","failure",t);
             }
         });
     }

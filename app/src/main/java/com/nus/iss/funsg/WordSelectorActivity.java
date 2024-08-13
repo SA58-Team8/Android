@@ -75,6 +75,14 @@ public class WordSelectorActivity extends AppCompatActivity {
             }
         });
 
+        Button skipBtn=findViewById(R.id.skipButton);
+        skipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         fetchSentence();
 
         final Animation slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
@@ -104,12 +112,12 @@ public class WordSelectorActivity extends AppCompatActivity {
             radioButton.setBackgroundColor(getResources().getColor(R.color.white));
             radioButton.setBackgroundResource(R.drawable.radio_button_background);
             radioButton.setButtonDrawable(android.R.color.transparent);
-            radioButton.setPadding(50, 22, 30, 22);
+            radioButton.setPadding(90, 22, 40, 22);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 12); // 设置底部间距为16dp
+            params.setMargins(0, 0, 0, 12);
             radioButton.setLayoutParams(params);
 
             radioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {

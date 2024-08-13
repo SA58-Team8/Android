@@ -37,6 +37,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.eventTitle.setText(event.getName());
         holder.eventDescription.setText(event.getDescription());
         holder.eventTime.setText(DateUtils.formatDateString(event.getStart()));
+        holder.eventParticipants.setText(event.getEventParticipants().size()+"/"+ event.getMaxParticipants()+" joined");
         Glide.with(context)
                 .load(event.getProfileImagePath())
                 .into(holder.eventImage);
@@ -55,12 +56,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView eventTitle;
         TextView eventTime;
         TextView eventDescription;
+        TextView eventParticipants;
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             eventImage = itemView.findViewById(R.id.event_image);
             eventTitle = itemView.findViewById(R.id.event_title);
             eventTime = itemView.findViewById(R.id.event_time);
             eventDescription = itemView.findViewById(R.id.event_description);
+            eventParticipants=itemView.findViewById(R.id.existingParticipants);
         }
     }
     public void updateEvents(List<AuthEventsResponse> newEventsList){

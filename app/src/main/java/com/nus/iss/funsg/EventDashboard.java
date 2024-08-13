@@ -25,7 +25,7 @@ public class EventDashboard extends AppCompatActivity {
     private long eventId;
     private TextView eventNameText, eventTimeStartText,eventTimeEndText,eventLocationText,eventParticipantsText,eventLocationAddressText;
     private Button modifyBtn;
-    private int limitParticipants;
+    private int limitParticipants,maxParticipants;
     private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription,eventImageUrl;
     private long groupId;
     private RecyclerView recyclerView;
@@ -55,6 +55,7 @@ public class EventDashboard extends AppCompatActivity {
                 intent.putExtra("eventStartDate",eventStartDate);
                 intent.putExtra("eventDescription",eventDescription);
                 intent.putExtra("eventImageUrl",eventImageUrl);
+                intent.putExtra("maxParticipants",maxParticipants);
                 startActivity(intent);
             }
         });
@@ -104,6 +105,7 @@ public class EventDashboard extends AppCompatActivity {
 
         eventName=event.getName();
         limitParticipants=event.getEventParticipants().size();
+        maxParticipants=event.getMaxParticipants();
         groupId=event.getGroupId();
         eventImageUrl=event.getProfileImagePath();
         eventStartDate=event.getStart();

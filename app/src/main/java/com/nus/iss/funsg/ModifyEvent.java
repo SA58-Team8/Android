@@ -80,7 +80,7 @@ public class ModifyEvent extends AppCompatActivity {
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private long eventId;
-    private int existingParticipants;
+    private int existingParticipants,maxParticipants;
     private long groupId;
     private String eventName,eventLocation,eventEndDate,eventStartDate,eventDescription;
 
@@ -96,6 +96,7 @@ public class ModifyEvent extends AppCompatActivity {
         eventStartDate=getIntent().getStringExtra("eventStartDate");
         eventDescription=getIntent().getStringExtra("eventDescription");
         imageUrl=getIntent().getStringExtra("eventImageUrl");
+        maxParticipants=getIntent().getIntExtra("maxParticipants",0);
 
 
 
@@ -147,7 +148,7 @@ public class ModifyEvent extends AppCompatActivity {
         eventDescriptionEditText.setHint(eventDescription);
 
         eventParticipantsEditText=findViewById(R.id.event_participants);
-        eventParticipantsEditText.setHint(String.valueOf(existingParticipants));
+        eventParticipantsEditText.setHint(String.valueOf(maxParticipants));
 
         backBtn=findViewById(R.id.back_button_modify_event);
 
@@ -215,7 +216,7 @@ public class ModifyEvent extends AppCompatActivity {
 
         //add condition
         if(maxParticipants<existingParticipants){
-            Toast.makeText(ModifyEvent.this, "attendees can't small than the number of  existing members", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ModifyEvent.this, "attendees can't smaller than existing members: "+existingParticipants, Toast.LENGTH_SHORT).show();
             return;
         }
 
