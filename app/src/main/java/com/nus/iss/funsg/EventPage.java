@@ -247,7 +247,7 @@ public class EventPage extends AppCompatActivity implements OnMapReadyCallback {
 
     private void updateUI(AuthEventsResponse event){
         eventName.setText(event.getName());
-        eventDate.setText(DateUtils.formatDateString(event.getStart()) + " - " + DateUtils.formatDateString(event.getEnd()));
+        eventDate.setText("From  " +DateUtils.formatDateTimeString(event.getStart()) + "\nTo       " + DateUtils.formatDateTimeString(event.getEnd()));
         try{
             String[] locationInfo = event.getLocation().split(",", 2);
             eventLocation.setText(locationInfo[0].trim());

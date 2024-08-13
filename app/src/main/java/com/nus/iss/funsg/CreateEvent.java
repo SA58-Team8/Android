@@ -2,6 +2,7 @@ package com.nus.iss.funsg;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -134,7 +136,7 @@ public class CreateEvent extends AppCompatActivity {
         startDateEditText = findViewById(R.id.start_date);
         endDateEditText = findViewById(R.id.end_date);
         calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         startDateEditText.setOnClickListener(v -> showDatePickerDialog(startDateEditText));
         endDateEditText.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
 
@@ -171,21 +173,19 @@ public class CreateEvent extends AppCompatActivity {
             }
         }
         try{
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startDateLocal = LocalDate.parse(startDate, inputFormatter);
-            LocalDate endDateLocal = LocalDate.parse(endDate, inputFormatter);
-            LocalDateTime startDateTime = startDateLocal.atStartOfDay();
-            LocalDateTime endDateTime = endDateLocal.atStartOfDay();
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime startDateTime = LocalDateTime.parse(startDate, inputFormatter);
+            LocalDateTime endDateTime = LocalDateTime.parse(endDate, inputFormatter);
 
-            LocalDate today = LocalDate.now();
+            LocalDateTime now = LocalDateTime.now();
 
-            if (startDateLocal.isBefore(today)) {
-                Toast.makeText(CreateEvent.this, "Start date cannot be earlier than today", Toast.LENGTH_SHORT).show();
+            if (startDateTime.isBefore(now)) {
+                Toast.makeText(CreateEvent.this, "Start time cannot be earlier than current date and time", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if(startDateLocal.isAfter(endDateLocal)){
-                Toast.makeText(CreateEvent.this, "Start date cannot be later than end date", Toast.LENGTH_SHORT).show();
+            if(startDateTime.isAfter(endDateTime)){
+                Toast.makeText(CreateEvent.this, "Start time cannot be later than end time", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -229,7 +229,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
             });
         }catch (Exception e) {
-            Toast.makeText(this, "Invalid date format. Please use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid date format. Please use yyyy-MM-dd HH:mm.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -240,8 +240,22 @@ public class CreateEvent extends AppCompatActivity {
                     @Override
                     public void onDateSet(@NonNull DatePicker view, int year, int month, int dayOfMonth) {
                         calendar.set(year, month, dayOfMonth);
-                        String selectedDate = dateFormat.format(calendar.getTime());
-                        textView.setText(selectedDate);
+
+                        new TimePickerDialog(
+                                CreateEvent.this,
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                                        calendar.set(Calendar.MINUTE,minute);
+                                        String selectedDateTime = dateFormat.format(calendar.getTime());
+                                        textView.setText(selectedDateTime);
+                                    }
+                                },
+                                calendar.get(Calendar.HOUR_OF_DAY),
+                                calendar.get(Calendar.MINUTE),
+                                true
+                        ).show();
                     }
                 },
                 calendar.get(Calendar.YEAR),

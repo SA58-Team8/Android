@@ -92,8 +92,8 @@ public class EventDashboard extends AppCompatActivity {
     }
     private void updateUI(AuthEventsResponse event){
         eventNameText.setText(event.getName());
-        eventTimeStartText.setText(DateUtils.formatDateString(event.getStart()));
-        eventTimeEndText.setText(DateUtils.formatDateString(event.getEnd()));
+        eventTimeStartText.setText(DateUtils.formatDateTimeString(event.getStart()));
+        eventTimeEndText.setText(DateUtils.formatDateTimeString(event.getEnd()));
         try{
             String[] locationInfo = event.getLocation().split(",", 2);
             eventLocationText.setText(locationInfo[0].trim());

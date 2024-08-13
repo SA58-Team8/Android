@@ -99,7 +99,7 @@
                         android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="3dp"
-                        android:text=""
+                        android:text="Aug, 24,2023 20:21"
                         android:textSize="28sp"
                         android:textColor="@color/darkgrey"
                         android:textStyle="bold"/>
