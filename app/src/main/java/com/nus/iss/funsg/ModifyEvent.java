@@ -104,7 +104,7 @@ public class ModifyEvent extends AppCompatActivity {
 
         groupId=getIntent().getLongExtra("groupId",-1L);
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0");
+            Places.initialize(getApplicationContext(),getString(R.string.google_map_key));
         }
         editTextLocation = findViewById(R.id.edit_text_location);
         editTextLocation.setHint(eventLocation);
@@ -165,11 +165,7 @@ public class ModifyEvent extends AppCompatActivity {
         uploadImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageUrl == null){
-                    requestStoragePermission();
-                }else {
-                    Toast.makeText(ModifyEvent.this, "You can only upload one image", Toast.LENGTH_SHORT).show();
-                }
+                requestStoragePermission();
             }
         });
         submitBtn=findViewById(R.id.submit_modify_btn);

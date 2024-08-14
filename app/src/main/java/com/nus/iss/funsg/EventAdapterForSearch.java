@@ -44,6 +44,7 @@ public class EventAdapterForSearch extends RecyclerView.Adapter<EventAdapterForS
             intent.putExtra("eventId", event.getId());
             context.startActivity(intent);
         });
+        holder.eventParticipants.setText(event.getEventParticipants().size()+"/"+event.getMaxParticipants()+" Have joined");
     }
 
     @Override
@@ -54,13 +55,14 @@ public class EventAdapterForSearch extends RecyclerView.Adapter<EventAdapterForS
         ImageView eventImage;
         TextView eventTitle;
         TextView eventTime;
-        TextView eventDescription;
+        TextView eventDescription,eventParticipants;
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             eventImage = itemView.findViewById(R.id.event_image);
             eventTitle = itemView.findViewById(R.id.event_title);
             eventTime = itemView.findViewById(R.id.event_time);
             eventDescription = itemView.findViewById(R.id.event_description);
+            eventParticipants=itemView.findViewById(R.id.existingParticipants);
         }
     }
     public void updateEvents(List<AuthEventsResponse> newEventsList){

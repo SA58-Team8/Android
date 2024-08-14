@@ -37,7 +37,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.eventTitle.setText(event.getName());
         holder.eventDescription.setText(event.getDescription());
         holder.eventTime.setText(DateUtils.formatDateString(event.getStart()));
-        holder.eventParticipants.setText(event.getEventParticipants().size()+"/"+ event.getMaxParticipants()+" joined");
+        holder.eventParticipants.setText(event.getEventParticipants().size()+"/"+ event.getMaxParticipants()+" Have joined");
         Glide.with(context)
                 .load(event.getProfileImagePath())
                 .into(holder.eventImage);

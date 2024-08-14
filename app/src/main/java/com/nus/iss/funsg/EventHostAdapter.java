@@ -45,6 +45,14 @@ public class EventHostAdapter extends RecyclerView.Adapter<EventHostAdapter.Even
                 context.startActivity(intent);
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EventPage.class);
+                intent.putExtra("eventId",event.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

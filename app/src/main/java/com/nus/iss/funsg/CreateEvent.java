@@ -101,7 +101,7 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyBdgPx-6hbOIzNUno2FRgNTDwr1ALQLHs0");
+            Places.initialize(getApplicationContext(), getString(R.string.google_map_key));
         }
         editTextLocation = findViewById(R.id.edit_text_location);
 
