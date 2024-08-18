@@ -1,32 +1,39 @@
 # FunSG Mobile Part (Android)
-**NOTE:** this part of project is based on Android 10 (API29), using Java to bulid and run.
 
-### Project Introduction:  
+**NOTE:** This part of the project is based on Android 10 (API 29) and uses Java to build and run.
 
-This project is to let user know about the events and groups with the same intrest based on their unique MBTI type. It uses machine learning to make suggestions so user can gain differents events on this app. User can join any group and event, even to discover past event amazing photos. We hope that this project can let people to find interest and make friends in every participation.
+### Project Introduction
 
-**How to run:**
-### 1. Clone the Repository:  
-After cloning code into local directory, please use Android Studio to build and run
-### 2. Modify Configuration:  
-This project need the backend server to acquire the data and the google cloud server api to build embeded google map.  
-Please change the codes in  
-"IPAddress.java"  
-and  
-"strings.xml".  
+This project allows users to discover events and groups that match their interests based on their unique MBTI type. It uses machine learning to make personalized suggestions, enabling users to explore different events on the app. Users can join any group or event, and even discover amazing photos from past events. We hope this project helps people find their interests and make friends through every participation.
 
-For example:  
-in strings.xml: please change  
-\<string name="google_map_key"\>YOUR_GOOGLE_MAPS_API_KEY\</string\>  
-in IPAddress.java : please change public static final String ipAddress
+### How to Run
 
+1. **Clone the Repository**  
+   After cloning the code into a local directory, please use Android Studio to build and run the project.
+   ```
+   git clone git@github.com:SA58-Team8/Android.git
+   //or
+   git clone https://github.com/SA58-Team8/Android.git
+   ```
+
+3. **Modify Configuration**  
+   This project requires a backend server to acquire data and the Google Cloud Server API to build the embedded Google Map.  
+   Please update the following files:
+   - `IPAddress.java`
+   - `strings.xml`
+
+   For example:
+   - In `strings.xml`: update  
+     `<string name="google_map_key">YOUR_GOOGLE_MAPS_API_KEY</string>`
+   - In `IPAddress.java`: update  
+     `public static final String ipAddress`
 
 ## Acknowledgments
 
-This whole FunSG project is created by NUS-ISS SA58 Team8 Members. Thank everyone again for making great contributions.  
+The entire FunSG project was created by NUS-ISS SA58 Team 8 members. We thank everyone again for their great contributions.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
